@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { logoutUser } from "../api/endpoints";
+import ThemeToggle from "./ThemeToggle";
 import { hasRole } from "../utils/roles";
 
 const readStoredUser = () => {
@@ -153,14 +154,18 @@ function Sidebar() {
   };
 
   return (
-    <div className="w-72 bg-slate-900 min-h-screen flex flex-col border-r border-slate-800/50">
-      <div className="p-8 mb-4">
-        <h2 className="text-xl font-black text-white tracking-tight uppercase italic">
-          Event<span className="text-emerald-500">Flow</span>
-        </h2>
-        <p className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase mt-1">
-          Management System
-        </p>
+    <div className="w-72 theme-bg-page min-h-screen flex flex-col border-r theme-border">
+      <div className="p-8 mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-black theme-text tracking-tight uppercase italic">
+            Event<span className="theme-text-primary">Flow</span>
+          </h2>
+          <p className="text-[10px] theme-text-muted font-bold tracking-[0.2em] uppercase mt-1">
+            Management System
+          </p>
+        </div>
+
+        <ThemeToggle />
       </div>
 
       <nav className="flex-1 px-4 space-y-6 overflow-y-auto">
@@ -169,24 +174,24 @@ function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-slate-800 mt-auto bg-slate-950/30">
-        <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-800/40 border border-white/5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold shadow-lg">
+      <div className="p-4 border-t theme-border mt-auto theme-bg-surface">
+        <div className="flex items-center gap-3 p-3 rounded-2xl theme-bg-surface-muted border theme-border">
+          <div className="w-10 h-10 rounded-xl theme-gradient-primary flex items-center justify-center theme-text font-bold shadow-lg">
             {user?.username?.charAt(0) || "U"}
           </div>
 
           <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-bold truncate">
+            <p className="theme-text text-sm font-bold truncate">
               {user?.username || "Guest User"}
             </p>
-            <p className="text-slate-500 text-[10px] font-medium truncate uppercase tracking-tighter">
+            <p className="theme-text-muted text-[10px] font-medium truncate uppercase tracking-tighter">
               {user?.regNumber || "ID Unknown"}
             </p>
           </div>
 
           <button
             onClick={handleLogout}
-            className="p-2 text-slate-500 hover:text-red-400 transition-colors"
+            className="p-2 theme-text-muted theme-hover-text-danger transition-colors"
             aria-label="Logout"
           >
             <LogOut size={16} />
@@ -199,7 +204,7 @@ function Sidebar() {
 
 const SidebarSection = ({ title, items }) => (
   <div className="space-y-2">
-    <p className="px-4 text-[10px] font-black text-slate-600 uppercase tracking-widest">{title}</p>
+    <p className="px-4 text-[10px] font-black theme-text-soft uppercase tracking-widest">{title}</p>
     <div className="space-y-1">
       {items.map((item) => (
         <SidebarLink key={item.path} item={item} />
@@ -215,8 +220,8 @@ const SidebarLink = ({ item }) => (
     className={({ isActive }) =>
       `flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
         isActive
-          ? "bg-emerald-600/10 text-emerald-500 border border-emerald-500/20"
-          : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+          ? "theme-bg-tint theme-text-primary border theme-border-primary"
+          : "theme-text-muted theme-hover-bg theme-hover-text"
       }`
     }
   >
@@ -225,7 +230,7 @@ const SidebarLink = ({ item }) => (
         <div className="flex items-center gap-3">
           <span
             className={`${
-              isActive ? "text-emerald-500" : "text-slate-500 group-hover:text-slate-300"
+              isActive ? "theme-text-primary" : "theme-text-muted theme-group-hover-text"
             } transition-colors`}
           >
             {item.icon}
@@ -234,7 +239,7 @@ const SidebarLink = ({ item }) => (
         </div>
 
         {isActive && (
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+          <div className="w-1.5 h-1.5 rounded-full theme-bg-accent theme-shadow-glow" />
         )}
       </>
     )}

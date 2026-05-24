@@ -65,15 +65,15 @@ function ClubCreatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 p-8">
+    <div className="min-h-screen theme-bg-page p-8">
       <div className="max-w-lg mx-auto">
 
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-black text-white tracking-tight">
+          <h1 className="text-2xl font-black theme-text tracking-tight">
             Create New Club
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="theme-text-muted text-sm mt-1">
             Register a new student club and assign its secretary
           </p>
         </div>
@@ -81,16 +81,16 @@ function ClubCreatePage() {
         {/* Form Card */}
         <form
           onSubmit={handleSubmit}
-          className="bg-slate-900 border border-slate-800/50 rounded-2xl overflow-hidden"
+          className="theme-bg-page border theme-border rounded-2xl overflow-hidden"
         >
           <div className="p-6 space-y-5">
-            <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+            <p className="text-[10px] font-black theme-text-soft uppercase tracking-widest">
               Club Details
             </p>
 
             {/* Club Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+              <label className="text-[10px] font-black uppercase tracking-widest theme-text-muted">
                 Club Name
               </label>
               <input
@@ -99,13 +99,13 @@ function ClubCreatePage() {
                 onChange={handleChange}
                 placeholder="e.g. ICTSC"
                 required
-                className="bg-slate-800 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                className="theme-bg-surface-muted border theme-border rounded-xl px-4 py-2.5 text-sm theme-text theme-placeholder focus:outline-none theme-focus-border transition-colors"
               />
             </div>
 
             {/* Secretary Reg Number */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+              <label className="text-[10px] font-black uppercase tracking-widest theme-text-muted">
                 Secretary
               </label>
               <select
@@ -114,7 +114,7 @@ function ClubCreatePage() {
                 onChange={handleChange}
                 required
                 disabled={loadingSecretaries || secretaries.length === 0}
-                className="bg-slate-800 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500/50 transition-colors disabled:opacity-60"
+                className="theme-bg-surface-muted border theme-border rounded-xl px-4 py-2.5 text-sm theme-text focus:outline-none theme-focus-border transition-colors disabled:opacity-60"
               >
                 <option value="">
                   {loadingSecretaries ? "Loading secretaries..." : "Select secretary"}
@@ -141,7 +141,7 @@ function ClubCreatePage() {
                 })}
               </select>
               {!loadingSecretaries && secretaries.length === 0 && (
-                <p className="text-xs text-amber-400">
+                <p className="text-xs theme-text-warning">
                   No secretaries available to assign right now.
                 </p>
               )}
@@ -149,25 +149,25 @@ function ClubCreatePage() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/25 text-red-400 text-xs font-semibold px-4 py-3 rounded-xl">
+              <div className="theme-bg-danger-soft border theme-border-danger theme-text-danger text-xs font-semibold px-4 py-3 rounded-xl">
                 {error}
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="flex justify-end gap-3 px-6 py-4 border-t border-slate-800/50 bg-slate-950/30">
+          <div className="flex justify-end gap-3 px-6 py-4 border-t theme-border theme-bg-surface">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-5 py-2.5 rounded-xl border border-slate-700/50 text-slate-400 hover:text-slate-200 hover:border-slate-600 text-sm font-bold transition-all"
+              className="px-5 py-2.5 rounded-xl border theme-border theme-text-muted theme-hover-text theme-hover-border text-sm font-bold transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || loadingSecretaries || secretaries.length === 0}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl theme-bg-primary theme-hover-bg-primary theme-text-on-primary text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Building2 size={15} />
               {loading ? "Creating..." : "Create Club"}

@@ -77,30 +77,30 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-4xl mx-auto bg-slate-800/40 backdrop-blur-xl border border-slate-700/50 p-8 rounded-[2rem] space-y-6 text-slate-200 shadow-2xl"
+      className="max-w-4xl mx-auto theme-bg-surface-muted backdrop-blur-xl border theme-border p-8 rounded-[2rem] space-y-6 theme-text shadow-2xl"
     >
       {/* HEADER */}
-      <div className="flex items-center justify-between border-b border-slate-700 pb-4">
+      <div className="flex items-center justify-between border-b theme-border pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400">
+          <div className="p-2 theme-bg-tint rounded-lg theme-text-primary">
             <FileText size={20} />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white leading-none">Letter Request</h2>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">create you event approval</p>
+            <h2 className="text-xl font-bold theme-text leading-none">Letter Request</h2>
+            <p className="text-[10px] theme-text-muted uppercase tracking-widest mt-1">create you event approval</p>
           </div>
         </div>
       </div>
 
       {/* EVENT NAME */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Event Title</label>
+        <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">Event Title</label>
         <input
           name="eventName"
           value={values.eventName}
           onChange={handleChange}
           placeholder="Enter event designation..."
-          className="w-full p-4 bg-slate-900/50 border border-slate-700 rounded-2xl focus:outline-none focus:border-cyan-500/50 transition-all text-white"
+          className="w-full p-4 theme-bg-surface border theme-border rounded-2xl focus:outline-none theme-focus-border transition-all theme-text"
           required
         />
       </div>
@@ -113,7 +113,7 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
             name="eventDate"
             value={values.eventDate}
             onChange={handleChange}
-            className="w-full bg-transparent focus:outline-none text-white"
+            className="w-full bg-transparent focus:outline-none theme-text"
             required
           />
         </FormField>
@@ -124,7 +124,7 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
             name="eventTime"
             value={values.eventTime}
             onChange={handleChange}
-            className="w-full bg-transparent focus:outline-none text-white"
+            className="w-full bg-transparent focus:outline-none theme-text"
             required
           />
         </FormField>
@@ -135,7 +135,7 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
             name="eventEndTime"
             value={values.eventEndTime}
             onChange={handleChange}
-            className="w-full bg-transparent focus:outline-none text-white"
+            className="w-full bg-transparent focus:outline-none theme-text"
             required
           />
         </FormField>
@@ -145,11 +145,11 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
             name="eventPlace"
             value={values.eventPlace || ""}
             onChange={handleChange}
-            className="w-full bg-transparent focus:outline-none cursor-pointer appearance-none text-white"
+            className="w-full bg-transparent focus:outline-none cursor-pointer appearance-none theme-text"
           >
-            <option value="" className="bg-slate-900 text-slate-400 italic">Without Location</option>
+            <option value="" className="theme-bg-page theme-text-muted italic">Without Location</option>
             {places.map((p) => (
-              <option key={p.placeId} value={p.placeName} className="bg-slate-900 text-white">
+              <option key={p.placeId} value={p.placeName} className="theme-bg-page theme-text">
                 {p.placeName}
               </option>
             ))}
@@ -159,16 +159,16 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
 
       {/* DESCRIPTION */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Description</label>
+        <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">Description</label>
         <div className="relative">
-          <AlignLeft className="absolute left-4 top-4 text-slate-500" size={18} />
+          <AlignLeft className="absolute left-4 top-4 theme-text-muted" size={18} />
           <textarea
             name="description"
             rows="3"
             value={values.description}
             onChange={handleChange}
             placeholder="Describe the scope of the event..."
-            className="w-full p-4 pl-12 bg-slate-900/50 border border-slate-700 rounded-2xl focus:outline-none focus:border-cyan-500/50 transition-all text-white resize-none"
+            className="w-full p-4 pl-12 theme-bg-surface border theme-border rounded-2xl focus:outline-none theme-focus-border transition-all theme-text resize-none"
             required
           />
         </div>
@@ -176,27 +176,27 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
 
       {/* FILE UPLOAD */}
       <div className="space-y-1.5">
-        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Documentation (PDF)</label>
-        <div className="border-2 border-dashed border-slate-700 hover:border-cyan-500/30 rounded-2xl p-4 transition-all bg-slate-900/20 group text-center">
+        <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">Documentation (PDF)</label>
+        <div className="border-2 border-dashed theme-border theme-hover-border-primary rounded-2xl p-4 transition-all theme-bg-surface group text-center">
           <input
             type="file"
             ref={fileInputRef}
             accept="application/pdf"
             onChange={(e) => setFile(e.target.files[0])}
-            className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest file:bg-cyan-500/10 file:text-cyan-400 hover:file:bg-cyan-500/20 text-slate-500 text-sm w-full"
+            className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-black file:uppercase file:tracking-widest theme-file-input-soft   theme-text-muted text-sm w-full"
           />
         </div>
       </div>
 
       {/* PIPELINE SECTION */}
-      <div className="bg-slate-900/40 border border-slate-700/50 rounded-2xl overflow-hidden shadow-inner">
-        <div className="p-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/20">
+      <div className="theme-bg-surface border theme-border rounded-2xl overflow-hidden shadow-inner">
+        <div className="p-4 border-b theme-border flex justify-between items-center theme-bg-surface-muted">
           <div className="flex items-center gap-2">
-             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Approval Pipeline</span>
+             <span className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em]">Approval Pipeline</span>
             
           </div>
           {loadingApprovers && (
-            <div className="flex items-center gap-2 text-cyan-400 animate-pulse text-[10px] font-bold">
+            <div className="flex items-center gap-2 theme-text-primary animate-pulse text-[10px] font-bold">
               <Loader2 size={12} className="animate-spin" /> SYNCHRONIZING
             </div>
           )}
@@ -213,7 +213,7 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
       {/* SUBMIT */}
       <button 
         type="submit"
-        className="w-full bg-white hover:bg-cyan-50 text-slate-900 py-4 rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 shadow-xl shadow-cyan-500/5 transition-all active:scale-[0.98]"
+        className="w-full theme-bg-primary theme-hover-bg-primary theme-text-on-primary py-4 rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 shadow-xl theme-shadow transition-all active:scale-[0.98]"
       >
         <Send size={18} />
         Send Request
@@ -226,9 +226,9 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
 function FormField({ label, icon, children }) {
   return (
     <div className="space-y-1.5 flex-1">
-      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{label}</label>
-      <div className="flex items-center gap-2 p-3 bg-slate-900/50 border border-slate-700 rounded-2xl focus-within:border-cyan-500/50 transition-all">
-        <div className="text-slate-500 shrink-0">{icon}</div>
+      <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">{label}</label>
+      <div className="flex items-center gap-2 p-3 theme-bg-surface border theme-border rounded-2xl theme-focus-border transition-all">
+        <div className="theme-text-muted shrink-0">{icon}</div>
         <div className="text-sm w-full">{children}</div>
       </div>
     </div>

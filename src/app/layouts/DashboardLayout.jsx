@@ -6,7 +6,7 @@ function DashboardLayout() {
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 overflow-y-auto bg-slate-900">
+        <div className="flex-1 overflow-y-auto theme-bg-page">
           <Outlet />
         </div>
       </div>

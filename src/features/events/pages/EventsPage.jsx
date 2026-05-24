@@ -121,10 +121,10 @@ function EventPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050b1a] p-6 space-y-8">
-      {placesLoading && <p className="text-white">Loading places...</p>}
-      {placesError && <p className="text-red-400">{placesError}</p>}
-      {roleMapError && <p className="text-red-400">{roleMapError}</p>}
+    <div className="relative min-h-screen theme-bg-page p-6 space-y-8">
+      {placesLoading && <p className="theme-text">Loading places...</p>}
+      {placesError && <p className="theme-text-danger">{placesError}</p>}
+      {roleMapError && <p className="theme-text-danger">{roleMapError}</p>}
 
       <EventForm
         values={values}
@@ -136,8 +136,8 @@ function EventPage() {
       />
 
       {loading && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]">
-          <div className="bg-blue-600 px-6 py-3 rounded-full text-white font-bold animate-pulse">
+        <div className="fixed inset-0 theme-bg-overlay flex items-center justify-center z-[60]">
+          <div className="theme-bg-primary px-6 py-3 rounded-full theme-text-on-primary font-bold animate-pulse">
             SUBMITTING...
           </div>
         </div>

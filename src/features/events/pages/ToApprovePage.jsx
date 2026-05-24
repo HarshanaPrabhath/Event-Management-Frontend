@@ -70,19 +70,19 @@ function ToApprovePage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050b1a] p-6 text-white">
+    <div className="relative min-h-screen theme-bg-page p-6 theme-text">
 
-      <div className="mb-6 border-b border-white/10 pb-4">
+      <div className="mb-6 border-b theme-border pb-4">
         <h1 className="text-3xl font-bold">To Approve</h1>
-        <p className="text-slate-400 text-sm">Pending approvals</p>
+        <p className="theme-text-muted text-sm">Pending approvals</p>
       </div>
 
       {loading && (
-        <p className="text-slate-400">Loading letters...</p>
+        <p className="theme-text-muted">Loading letters...</p>
       )}
 
       {!loading && letters.length === 0 && (
-        <div className="text-center text-slate-400 mt-20">
+        <div className="text-center theme-text-muted mt-20">
           No letters pending approval 🎉
         </div>
       )}
@@ -100,8 +100,8 @@ function ToApprovePage() {
 
       {/* REJECT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-[#0f172a] w-[400px] p-6 rounded-2xl border border-white/10">
+        <div className="fixed inset-0 theme-bg-overlay flex items-center justify-center z-50">
+          <div className="theme-bg-surface w-[400px] p-6 rounded-2xl border theme-border">
 
             <h2 className="text-xl font-bold mb-4">
               Reject Letter
@@ -110,7 +110,7 @@ function ToApprovePage() {
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full h-28 p-3 rounded-lg bg-white/5 border border-white/10"
+              className="w-full h-28 p-3 rounded-lg theme-bg-surface-muted border theme-border"
               placeholder="Enter rejection reason..."
             />
 
@@ -118,14 +118,14 @@ function ToApprovePage() {
 
               <button
                 onClick={() => setShowModal(false)}
-                className="text-slate-300"
+                className="theme-text"
               >
                 Cancel
               </button>
 
               <button
                 onClick={confirmReject}
-                className="bg-red-600 px-4 py-2 rounded"
+                className="theme-bg-danger theme-text-on-primary px-4 py-2 rounded"
               >
                 Reject
               </button>

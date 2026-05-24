@@ -147,7 +147,7 @@ const ApprovalPdfPreview = ({
   return (
     <div
       ref={containerRef}
-      className={`${heightClass} bg-black rounded-2xl relative overflow-hidden ${
+      className={`${heightClass} theme-bg-overlay rounded-2xl relative overflow-hidden ${
         onSelectSignaturePosition ? "cursor-crosshair" : ""
       }`}
       onClick={handleClick}
@@ -159,8 +159,8 @@ const ApprovalPdfPreview = ({
           style={{
             position: "absolute",
             ...overlayStyle,
-            border: "2px solid #3b82f6",
-            background: signatureImageUrl ? "rgba(255,255,255,0.92)" : "rgba(59,130,246,0.15)",
+            border: "2px solid var(--theme-primary)",
+            background: signatureImageUrl ? "var(--theme-signature-surface)" : "var(--theme-tint-strong)",
             pointerEvents: "none",
             display: "flex",
             alignItems: "center",
@@ -176,7 +176,7 @@ const ApprovalPdfPreview = ({
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             />
           ) : (
-            <span style={{ fontSize: "10px", color: "#60a5fa", fontWeight: "bold" }}>SIGN HERE</span>
+            <span style={{ fontSize: "10px", color: "var(--theme-primary)", fontWeight: "bold" }}>SIGN HERE</span>
           )}
         </div>
       )}

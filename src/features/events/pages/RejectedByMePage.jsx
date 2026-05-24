@@ -32,28 +32,28 @@ function RejectedByMePage() {
 
   if (loading) {
     return (
-      <div className="text-white p-6">
+      <div className="theme-text p-6">
         Loading rejected letters...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050b1a] p-6 text-white">
+    <div className="min-h-screen theme-bg-page p-6 theme-text">
 
       {/* HEADER */}
-      <div className="mb-6 border-b border-white/10 pb-4">
-        <h1 className="text-3xl font-bold text-red-400">
+      <div className="mb-6 border-b theme-border pb-4">
+        <h1 className="text-3xl font-bold theme-text-danger">
           Rejected By Me
         </h1>
-        <p className="text-slate-400 text-sm">
+        <p className="theme-text-muted text-sm">
           Letters you have rejected
         </p>
       </div>
 
       {/* EMPTY STATE */}
       {letters.length === 0 ? (
-        <div className="text-center text-slate-400 mt-20">
+        <div className="text-center theme-text-muted mt-20">
           No rejected letters found
         </div>
       ) : (
