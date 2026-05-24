@@ -1,6 +1,275 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
-*{
+* {
     font-family: "Poppins", sans-serif;
+}
+
+/* ==========================================
+   SITE COLOR TOKENS
+   Edit this section to change the whole site palette.
+   ========================================== */
+:root {
+    color-scheme: dark;
+    --theme-ink: #f8fafc;
+    --theme-muted: #94a3b8;
+    --theme-soft: #64748b;
+    --theme-primary: #059669;
+    --theme-accent: #06b6d4;
+    --theme-page: #020617;
+    --theme-surface: #0f172a;
+    --theme-surface-muted: #1e293b;
+    --theme-surface-strong: #334155;
+    --theme-line: #334155;
+    --theme-line-strong: #475569;
+    --theme-tint: rgb(6 182 212 / 0.1);
+    --theme-tint-strong: rgb(6 182 212 / 0.2);
+    --theme-overlay: rgb(2 6 23 / 0.72);
+    --theme-on-primary: #ffffff;
+    --theme-focus: rgb(6 182 212 / 0.32);
+    --theme-shadow: rgb(0 0 0 / 0.28);
+    --theme-glow: rgb(6 182 212 / 0.45);
+    --theme-card-shadow: none;
+    --theme-input-highlight: rgb(255 255 255 / 0.04);
+    --theme-signature-surface: #ffffff;
+    --theme-body-background:
+            radial-gradient(circle at top left, rgb(6 182 212 / 0.14), transparent 34rem),
+            linear-gradient(180deg, #020617 0%, var(--theme-page) 34rem);
+
+    --status-success: #22c55e;
+    --status-success-soft: rgb(34 197 94 / 0.12);
+    --status-success-line: rgb(34 197 94 / 0.28);
+    --status-danger: #f87171;
+    --status-danger-soft: rgb(248 113 113 / 0.12);
+    --status-danger-line: rgb(248 113 113 / 0.28);
+    --status-warning: #f59e0b;
+    --status-warning-soft: rgb(245 158 11 / 0.12);
+    --status-warning-line: rgb(245 158 11 / 0.3);
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --theme-ink: #001e3d;
+    --theme-muted: #3a6088;
+    --theme-soft: #6c91b7;
+    --theme-primary: #0056b3;
+    --theme-accent: #007bff;
+    --theme-page: #f4f8fc;
+    --theme-surface: #ffffff;
+    --theme-surface-muted: #e6f0fa;
+    --theme-surface-strong: #d3e5f7;
+    --theme-line: #cbdffa;
+    --theme-line-strong: #9cc2f2;
+    --theme-tint: #f0f6ff;
+    --theme-tint-strong: #d0e4ff;
+    --theme-overlay: rgb(0 30 61 / 0.45);
+    --theme-on-primary: #ffffff;
+    --theme-focus: rgb(63 162 246 / 0.35);
+    --theme-shadow: rgb(0 86 179 / 0.16);
+    --theme-glow: rgb(0 123 255 / 0.4);
+    --theme-card-shadow: 0 14px 40px rgb(0 86 179 / 0.08);
+    --theme-input-highlight: rgb(255 255 255 / 0.65);
+    --theme-signature-surface: #ffffff;
+    --theme-body-background:
+            radial-gradient(circle at top left, rgb(208 228 255 / 0.55), transparent 34rem),
+            linear-gradient(180deg, #ffffff 0%, var(--theme-page) 34rem);
+
+    --status-success: #087f5b;
+    --status-success-soft: rgb(8 127 91 / 0.12);
+    --status-success-line: rgb(8 127 91 / 0.25);
+    --status-danger: #c92a2a;
+    --status-danger-soft: rgb(201 42 42 / 0.1);
+    --status-danger-line: rgb(201 42 42 / 0.24);
+    --status-warning: #b7791f;
+    --status-warning-soft: rgb(183 121 31 / 0.12);
+    --status-warning-line: rgb(183 121 31 / 0.28);
+}
+
+body {
+    background: var(--theme-body-background);
+    color: var(--theme-ink);
+}
+
+/* ==========================================
+   SEMANTIC THEME UTILITIES
+   Components should use these instead of palette names.
+   ========================================== */
+.theme-bg-page { background-color: var(--theme-page); }
+.theme-bg-surface { background-color: var(--theme-surface); }
+.theme-bg-surface-muted { background-color: var(--theme-surface-muted); }
+.theme-bg-surface-strong { background-color: var(--theme-surface-strong); }
+.theme-bg-tint { background-color: var(--theme-tint); }
+.theme-bg-tint-strong { background-color: var(--theme-tint-strong); }
+.theme-bg-primary { background-color: var(--theme-primary); }
+.theme-bg-accent { background-color: var(--theme-accent); }
+.theme-bg-overlay { background-color: var(--theme-overlay); }
+.theme-bg-success { background-color: var(--status-success); }
+.theme-bg-success-soft { background-color: var(--status-success-soft); }
+.theme-bg-danger { background-color: var(--status-danger); }
+.theme-bg-danger-soft { background-color: var(--status-danger-soft); }
+.theme-bg-warning { background-color: var(--status-warning); }
+.theme-bg-warning-soft { background-color: var(--status-warning-soft); }
+.theme-signature-surface { background-color: var(--theme-signature-surface); }
+
+.theme-text { color: var(--theme-ink); }
+.theme-text-muted { color: var(--theme-muted); }
+.theme-text-soft { color: var(--theme-soft); }
+.theme-text-primary { color: var(--theme-primary); }
+.theme-text-accent { color: var(--theme-accent); }
+.theme-text-on-primary { color: var(--theme-on-primary); }
+.theme-text-success { color: var(--status-success); }
+.theme-text-danger { color: var(--status-danger); }
+.theme-text-warning { color: var(--status-warning); }
+.theme-text-transparent { color: transparent; }
+
+.theme-border { border-color: var(--theme-line); }
+.theme-border-strong { border-color: var(--theme-line-strong); }
+.theme-border-primary { border-color: color-mix(in srgb, var(--theme-primary) 32%, transparent); }
+.theme-border-accent { border-color: color-mix(in srgb, var(--theme-accent) 32%, transparent); }
+.theme-border-success { border-color: var(--status-success-line); }
+.theme-border-danger { border-color: var(--status-danger-line); }
+.theme-border-warning { border-color: var(--status-warning-line); }
+
+.theme-divide > :not([hidden]) ~ :not([hidden]) {
+    border-color: var(--theme-line);
+}
+
+.theme-placeholder::placeholder {
+    color: var(--theme-soft);
+}
+
+.theme-card-shadow {
+    box-shadow: var(--theme-card-shadow);
+}
+
+.theme-inset-highlight {
+    box-shadow: inset 0 1px 0 var(--theme-input-highlight);
+}
+
+.theme-shadow {
+    --tw-shadow-color: var(--theme-shadow);
+}
+
+.theme-shadow-glow {
+    box-shadow: 0 0 8px var(--theme-glow);
+}
+
+.theme-gradient-primary {
+    background-image: linear-gradient(to bottom right, var(--theme-primary), var(--theme-accent));
+}
+
+.theme-gradient-primary-r {
+    background-image: linear-gradient(to right, var(--theme-primary), var(--theme-accent));
+}
+
+.theme-gradient-text {
+    background-image: linear-gradient(to right, var(--theme-primary), var(--theme-accent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.theme-hover-bg:hover { background-color: var(--theme-surface-muted); }
+.theme-hover-bg-tint:hover { background-color: var(--theme-tint-strong); }
+.theme-hover-bg-primary:hover { background-color: var(--theme-accent); }
+.theme-hover-text:hover { color: var(--theme-ink); }
+.theme-hover-text-primary:hover { color: var(--theme-primary); }
+.theme-hover-text-danger:hover { color: var(--status-danger); }
+.theme-hover-border:hover { border-color: var(--theme-line-strong); }
+.theme-hover-border-primary:hover { border-color: color-mix(in srgb, var(--theme-primary) 42%, transparent); }
+.theme-hover-border-danger:hover { border-color: var(--status-danger-line); }
+
+.theme-selection::selection,
+.theme-selection *::selection {
+    background-color: var(--theme-tint-strong);
+}
+
+.theme-focus-border:focus,
+.theme-focus-border:focus-within {
+    border-color: var(--theme-primary);
+}
+
+.theme-focus-ring:focus {
+    --tw-ring-color: var(--theme-focus);
+}
+
+.theme-disabled-bg:disabled {
+    background-color: var(--theme-surface-muted);
+}
+
+.theme-disabled-text:disabled {
+    color: var(--theme-soft);
+}
+
+.group:hover .theme-group-hover-text {
+    color: var(--theme-ink);
+}
+
+.group:hover .theme-group-hover-text-primary {
+    color: var(--theme-primary);
+}
+
+.theme-file-input::file-selector-button {
+    margin-right: 0.75rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background-color: var(--theme-primary);
+    color: var(--theme-on-primary);
+    font-weight: 700;
+}
+
+.theme-file-input:hover::file-selector-button {
+    background-color: var(--theme-accent);
+}
+
+.theme-file-input-soft::file-selector-button {
+    margin-right: 1rem;
+    border: 0;
+    border-radius: 9999px;
+    background-color: var(--theme-tint);
+    color: var(--theme-primary);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.theme-file-input-soft:hover::file-selector-button {
+    background-color: var(--theme-tint-strong);
+}
+
+.rbc-calendar {
+    color: var(--theme-ink);
+}
+
+.rbc-toolbar button,
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+    border-color: var(--theme-line);
+}
+
+.calendar-event-approved {
+    background-color: var(--theme-tint) !important;
+    border-left: 2px solid color-mix(in srgb, var(--theme-primary) 42%, transparent) !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    color: var(--theme-primary) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    padding: 0.25rem 0.5rem !important;
+    box-shadow: 0 1px 2px var(--theme-shadow) !important;
+}
+
+.calendar-event-pending {
+    background-color: var(--status-warning-soft) !important;
+    border-left: 2px solid var(--status-warning-line) !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    color: var(--status-warning) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    padding: 0.25rem 0.5rem !important;
+    box-shadow: 0 1px 2px var(--theme-shadow) !important;
 }

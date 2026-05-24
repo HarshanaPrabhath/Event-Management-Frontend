@@ -13,7 +13,7 @@ function ApproverItem({
   return (
     <div
       key={`${approver.role}-${index}`}
-      className="group flex gap-3 items-center bg-white/5 border border-white/10 p-3 rounded-xl transition-all hover:bg-white/[0.08]"
+      className="group flex gap-3 items-center theme-bg-surface-muted border theme-border p-3 rounded-xl transition-all theme-hover-bg"
     >
       <div className="flex-shrink-0">
         <input
@@ -21,7 +21,7 @@ function ApproverItem({
           value={approver.order}
           disabled
           readOnly
-          className={`w-12 bg-[#050b1a] border border-white/10 rounded-lg p-2 text-center text-sm font-bold text-blue-400 focus:ring-1 focus:ring-blue-500 outline-none ${
+          className={`w-12 theme-bg-page border theme-border rounded-lg p-2 text-center text-sm font-bold theme-text-primary focus:ring-1 theme-focus-ring outline-none ${
             isFirstApprover ? "opacity-50 cursor-not-allowed" : ""
           }`}
         />
@@ -33,16 +33,16 @@ function ApproverItem({
             type="text"
             value={approver.displayName || approver.role || ""}
             disabled
-            className="w-full bg-[#1a2235] border border-blue-500/50 rounded-lg p-2 text-sm text-blue-400 font-semibold italic"
+            className="w-full theme-bg-surface-muted border theme-border-primary rounded-lg p-2 text-sm theme-text-primary font-semibold italic"
           />
         ) : (
           <select
             value={approver.role}
             onChange={(e) => onRoleChange(index, e.target.value)}
-            className="w-full bg-[#1a2235] border border-white/10 rounded-lg p-2 text-sm text-white outline-none cursor-pointer focus:border-blue-500/50"
+            className="w-full theme-bg-surface-muted border theme-border rounded-lg p-2 text-sm theme-text outline-none cursor-pointer theme-focus-border"
           >
             {Object.keys(roleMap).map((role) => (
-              <option key={role} value={role} className="bg-[#0f172a] text-white">
+              <option key={role} value={role} className="theme-bg-surface theme-text">
                 {role}
               </option>
             ))}
@@ -56,8 +56,8 @@ function ApproverItem({
         disabled={isFirstApprover}
         className={`p-2 transition-colors md:opacity-0 group-hover:opacity-100 ${
           isFirstApprover
-            ? "opacity-30 cursor-not-allowed text-slate-600"
-            : "text-slate-500 hover:text-red-400"
+            ? "opacity-30 cursor-not-allowed theme-text-soft"
+            : "theme-text-muted theme-hover-text-danger"
         }`}
         title={isFirstApprover ? "Cannot remove first approver" : "Remove step"}
       >

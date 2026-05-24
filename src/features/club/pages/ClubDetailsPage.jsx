@@ -43,12 +43,12 @@ function ClubDetailsPage() {
   }, [normalizedId]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8">
+    <div className="min-h-screen theme-bg-page theme-text p-4 md:p-8">
       <div className="max-w-5xl mx-auto">
         {/* Navigation */}
         <button
           onClick={() => navigate(-1)}
-          className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-400 transition-all mb-8"
+          className="group flex items-center gap-2 text-sm font-bold theme-text-muted theme-hover-text-primary transition-all mb-8"
         >
           <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
           Back to Directory
@@ -56,18 +56,18 @@ function ClubDetailsPage() {
 
         {loading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-48 bg-slate-900 rounded-3xl" />
-            <div className="h-24 bg-slate-900 rounded-3xl" />
+            <div className="h-48 theme-bg-page rounded-3xl" />
+            <div className="h-24 theme-bg-page rounded-3xl" />
           </div>
         ) : error ? (
-          <div className="p-8 rounded-3xl border border-red-500/20 bg-red-500/5 text-red-400 text-center font-bold">
+          <div className="p-8 rounded-3xl border theme-border-danger theme-bg-danger-soft theme-text-danger text-center font-bold">
             {error}
           </div>
         ) : (
           <div className="space-y-6">
             {/* --- Hero Header Card --- */}
-            <div className="relative rounded-[2.5rem] border border-slate-800 bg-slate-900/40 overflow-hidden shadow-2xl">
-              <div className="h-48 bg-gradient-to-br from-emerald-600/20 via-slate-900 to-blue-600/20 relative">
+            <div className="relative rounded-[2.5rem] border theme-border theme-bg-surface overflow-hidden shadow-2xl">
+              <div className="h-48 theme-gradient-primary relative">
                 {/* Visual Placeholder for bgImageUrl */}
                 {resolveImageUrl(club.bgImageUrl || club.bgImagePath || club.backgroundImage) ? (
                   <img
@@ -84,17 +84,17 @@ function ClubDetailsPage() {
 
               <div className="px-8 pb-8 -mt-3 relative z-10">
                 <div className="flex flex-col md:flex-row md:items-end gap-6">
-                  <div className="w-24 h-24 rounded-3xl bg-slate-900 border-4 border-slate-950 flex items-center justify-center shadow-2xl text-emerald-500">
+                  <div className="w-24 h-24 rounded-3xl theme-bg-page border-4 theme-border flex items-center justify-center shadow-2xl theme-text-primary">
                     <Building2 size={40} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <h1 className="text-4xl font-black text-white tracking-tighter">{club.clubName}</h1>
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                      <h1 className="text-4xl font-black theme-text tracking-tighter">{club.clubName}</h1>
+                      <span className="px-3 py-1 rounded-full theme-bg-tint border theme-border-primary theme-text-primary text-[10px] font-black uppercase tracking-widest">
                         Official Club
                       </span>
                     </div>
-                    <p className="text-slate-500 font-medium mt-6"></p>
+                    <p className="theme-text-muted font-medium mt-6"></p>
                   </div>
                 </div>
               </div>
@@ -107,34 +107,34 @@ function ClubDetailsPage() {
               <div className="md:col-span-2 space-y-6">
                 {/* Vision & Mission Sections */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="p-6 rounded-3xl border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-4">
+                  <div className="p-6 rounded-3xl border theme-border theme-bg-surface theme-hover-border-primary transition-colors">
+                    <div className="w-10 h-10 rounded-xl theme-bg-tint flex items-center justify-center theme-text-primary mb-4">
                       <Target size={20} />
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">Our Vision</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">
+                    <h3 className="text-lg font-bold theme-text mb-2">Our Vision</h3>
+                    <p className="text-sm theme-text-muted leading-relaxed">
                       {club.vision || "To inspire and lead the next generation of innovators within our university community."}
                     </p>
                   </div>
 
-                  <div className="p-6 rounded-3xl border border-slate-800 bg-slate-900/60 hover:border-blue-500/50 transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-4">
+                  <div className="p-6 rounded-3xl border theme-border theme-bg-surface theme-hover-border-primary transition-colors">
+                    <div className="w-10 h-10 rounded-xl theme-bg-tint flex items-center justify-center theme-text-primary mb-4">
                       <Rocket size={20} />
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">Our Mission</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">
+                    <h3 className="text-lg font-bold theme-text mb-2">Our Mission</h3>
+                    <p className="text-sm theme-text-muted leading-relaxed">
                       {club.mission || "Providing a platform for students to collaborate, learn, and excel in their respective fields."}
                     </p>
                   </div>
                 </div>
 
                 {/* About Section */}
-                <div className="p-8 rounded-3xl border border-slate-800 bg-slate-900/20">
-                  <h3 className="flex items-center gap-2 text-xl font-bold text-white mb-4">
-                    <FileText size={20} className="text-emerald-500" />
+                <div className="p-8 rounded-3xl border theme-border theme-bg-surface">
+                  <h3 className="flex items-center gap-2 text-xl font-bold theme-text mb-4">
+                    <FileText size={20} className="theme-text-primary" />
                     About the Organization
                   </h3>
-                  <p className="text-slate-400 leading-relaxed italic">
+                  <p className="theme-text-muted leading-relaxed italic">
                     {club.description || "Information technology and communication are at the heart of modern innovation. ICTSC serves as the hub for tech enthusiasts to explore beyond the classroom."}
                   </p>
                 </div>

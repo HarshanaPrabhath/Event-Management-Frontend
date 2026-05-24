@@ -1,10 +1,10 @@
 function BackgroundImageDisplay({ imageUrl }) {
   return (
     <div className="space-y-1.5">
-      <p className="text-[11px] font-black uppercase tracking-widest text-slate-500">
+      <p className="text-[11px] font-black uppercase tracking-widest theme-text-muted">
         Background Image
       </p>
-      <div className="rounded-xl border border-slate-800 bg-slate-950/50 overflow-hidden">
+      <div className="rounded-xl border theme-border theme-bg-surface overflow-hidden">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -12,7 +12,7 @@ function BackgroundImageDisplay({ imageUrl }) {
             className="w-full h-52 object-cover"
           />
         ) : (
-          <div className="h-40 flex items-center justify-center text-sm text-slate-500">
+          <div className="h-40 flex items-center justify-center text-sm theme-text-muted">
             No background image uploaded.
           </div>
         )}

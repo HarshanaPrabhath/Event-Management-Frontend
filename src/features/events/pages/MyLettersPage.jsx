@@ -27,24 +27,24 @@ function MyLettersPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#050b1a] p-6 space-y-8 overflow-hidden">
+    <div className="relative min-h-screen theme-bg-page p-6 space-y-8 overflow-hidden">
 
       {/* Background Decorative Glows */}
-      <div className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full bg-cyan-500/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full theme-bg-tint blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full theme-bg-tint blur-[100px] pointer-events-none" />
 
       {/* Header */}
-      <header className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
+      <header className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b theme-border pb-6">
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold theme-text">
             My Documents
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="theme-text-muted text-sm mt-1">
             Manage and track your event proposals.
           </p>
         </div>
 
-        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-blue-400 text-sm font-medium">
+        <div className="px-4 py-2 rounded-xl theme-bg-surface-muted border theme-border theme-text-primary text-sm font-medium">
           {letters.length} Total Letters
         </div>
       </header>
@@ -56,8 +56,8 @@ function MyLettersPage() {
             <LetterCard key={letter.letterId} letter={letter} />
           ))
         ) : (
-          <div className="text-center py-24 bg-white/5 border border-dashed border-white/10 rounded-3xl">
-            <p className="text-slate-500">
+          <div className="text-center py-24 theme-bg-surface-muted border border-dashed theme-border rounded-3xl">
+            <p className="theme-text-muted">
               No documents found in your history.
             </p>
           </div>

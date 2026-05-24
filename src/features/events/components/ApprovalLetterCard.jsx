@@ -133,7 +133,7 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
   return (
     <>
       {/* ================= CARD ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-slate-900/50 border border-white/10 rounded-[2.5rem] p-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 theme-bg-surface border theme-border rounded-[2.5rem] p-8">
         <ApprovalPdfPreview pdfUrl={pdfUrl} />
 
         <ApprovalLetterSummary

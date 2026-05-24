@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 import { AdminCreateUserPage, LoginPage, RegisterPage } from "../../features/auth/pages";
@@ -14,6 +14,7 @@ import { PlacesPage } from "../../features/places/pages";
 import { NotFoundPage } from "../../features/not-found/pages";
 import { ClubCreatePage, ClubDetailsPage, ClubProfilePage } from "../../features/club/pages";
 import { LandingPage } from "../../features/landing/pages";
+import ThemeToggle from "../../shared/ui/ThemeToggle";
 
 const hasSession = () => {
   try {
@@ -33,9 +34,20 @@ function RedirectIfAuth({ children }) {
   return hasSession() ? <Navigate to="/dashboard" replace /> : children;
 }
 
+function PublicThemeToggle() {
+  const location = useLocation();
+
+  if (location.pathname.startsWith("/dashboard")) {
+    return null;
+  }
+
+  return <ThemeToggle className="fixed right-5 top-5 z-50 shadow-lg" />;
+}
+
 function AppRouter() {
   return (
     <BrowserRouter>
+      <PublicThemeToggle />
       <Routes>
         {/* Auth */}
         <Route

@@ -72,8 +72,8 @@ function AdminCreateUserPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-slate-950 p-8 text-slate-200">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-sm text-red-300">
+      <div className="min-h-screen theme-bg-page p-8 theme-text">
+        <div className="mx-auto max-w-3xl rounded-2xl border theme-border-danger theme-bg-danger-soft p-6 text-sm theme-text-danger">
           Access denied. Only admins can create user accounts.
         </div>
       </div>
@@ -81,14 +81,14 @@ function AdminCreateUserPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 p-8">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-slate-800 bg-slate-900/60 overflow-hidden">
-        <div className="border-b border-slate-800 bg-slate-950/40 px-6 py-4">
-          <h1 className="text-xl font-black text-white tracking-tight">Create User</h1>
-          <p className="mt-1 text-xs text-slate-400">Create any system account with an explicit role.</p>
+    <div className="min-h-screen theme-bg-page p-8">
+      <div className="mx-auto max-w-2xl rounded-2xl border theme-border theme-bg-surface overflow-hidden">
+        <div className="border-b theme-border theme-bg-surface px-6 py-4">
+          <h1 className="text-xl font-black theme-text tracking-tight">Create User</h1>
+          <p className="mt-1 text-xs theme-text-muted">Create any system account with an explicit role.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-6 text-slate-200">
+        <form onSubmit={handleSubmit} className="space-y-5 p-6 theme-text">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Username">
               <input
@@ -96,7 +96,7 @@ function AdminCreateUserPage() {
                 value={form.username}
                 onChange={handleChange}
                 required
-                className="w-full rounded-xl border border-slate-700/60 bg-slate-800 px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500/50"
+                className="w-full rounded-xl border theme-border theme-bg-surface-muted px-4 py-2.5 text-sm focus:outline-none theme-focus-border"
               />
             </Field>
             <Field label="Reg Number">
@@ -105,7 +105,7 @@ function AdminCreateUserPage() {
                 value={form.regNumber}
                 onChange={handleChange}
                 required
-                className="w-full rounded-xl border border-slate-700/60 bg-slate-800 px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500/50"
+                className="w-full rounded-xl border theme-border theme-bg-surface-muted px-4 py-2.5 text-sm focus:outline-none theme-focus-border"
               />
             </Field>
           </div>
@@ -117,7 +117,7 @@ function AdminCreateUserPage() {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full rounded-xl border border-slate-700/60 bg-slate-800 px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500/50"
+              className="w-full rounded-xl border theme-border theme-bg-surface-muted px-4 py-2.5 text-sm focus:outline-none theme-focus-border"
             />
           </Field>
 
@@ -128,7 +128,7 @@ function AdminCreateUserPage() {
               value={form.password}
               onChange={handleChange}
               required
-              className="w-full rounded-xl border border-slate-700/60 bg-slate-800 px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500/50"
+              className="w-full rounded-xl border theme-border theme-bg-surface-muted px-4 py-2.5 text-sm focus:outline-none theme-focus-border"
             />
           </Field>
 
@@ -137,7 +137,7 @@ function AdminCreateUserPage() {
               name="role"
               value={form.role}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-700/60 bg-slate-800 px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500/50"
+              className="w-full rounded-xl border theme-border theme-bg-surface-muted px-4 py-2.5 text-sm focus:outline-none theme-focus-border"
             >
               {ROLE_OPTIONS.map((role) => (
                 <option key={role} value={role}>
@@ -148,13 +148,13 @@ function AdminCreateUserPage() {
           </Field>
 
           {error && (
-            <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+            <div className="rounded-xl border theme-border-danger theme-bg-danger-soft px-4 py-3 text-sm theme-text-danger">
               {error}
             </div>
           )}
 
           {message && (
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+            <div className="rounded-xl border theme-border-primary theme-bg-tint px-4 py-3 text-sm theme-text-primary">
               {message}
             </div>
           )}
@@ -163,7 +163,7 @@ function AdminCreateUserPage() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 rounded-xl theme-bg-primary px-5 py-2.5 text-sm font-bold theme-text-on-primary transition-colors theme-hover-bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <UserPlus size={16} />
               {loading ? "Creating..." : "Create User"}
@@ -178,7 +178,7 @@ function AdminCreateUserPage() {
 function Field({ label, children }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">{label}</span>
+      <span className="text-[11px] font-black uppercase tracking-widest theme-text-muted">{label}</span>
       {children}
     </label>
   );

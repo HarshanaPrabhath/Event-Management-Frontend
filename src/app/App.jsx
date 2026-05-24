@@ -1,8 +1,11 @@
 import AppRouter from "./router/AppRouter";
+import { ThemeProvider } from "../shared/theme/ThemeProvider";
 
 function App() {
   return (
-        <AppRouter />
+    <ThemeProvider>
+      <AppRouter />
+    </ThemeProvider>
   );
 }
 

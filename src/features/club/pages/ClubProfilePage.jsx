@@ -94,8 +94,8 @@ function ClubProfilePage() {
 
   if (!isSecretary) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-200 p-6">
-        <div className="max-w-4xl mx-auto rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-red-300">
+      <div className="min-h-screen theme-bg-page theme-text p-6">
+        <div className="max-w-4xl mx-auto rounded-2xl border theme-border-danger theme-bg-danger-soft p-6 theme-text-danger">
           This section is available only for ROLE_SECRETARY users.
         </div>
       </div>
@@ -180,8 +180,8 @@ function ClubProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-200 p-6">
-        <div className="max-w-4xl mx-auto rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+      <div className="min-h-screen theme-bg-page theme-text p-6">
+        <div className="max-w-4xl mx-auto rounded-2xl border theme-border theme-bg-surface p-6">
           Loading club profile...
         </div>
       </div>
@@ -189,7 +189,7 @@ function ClubProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 p-6">
+    <div className="min-h-screen theme-bg-page theme-text p-6">
       <div className="max-w-4xl mx-auto">
         <ClubPageHeader
           title="My Club Profile"
@@ -197,9 +197,9 @@ function ClubProfilePage() {
         />
 
         {currentClub && (
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 overflow-hidden mb-6">
-            <div className="px-6 md:px-8 py-4 border-b border-slate-800 bg-slate-950/40">
-              <h2 className="text-sm font-black tracking-wider uppercase text-slate-400">
+          <div className="rounded-3xl border theme-border theme-bg-surface overflow-hidden mb-6">
+            <div className="px-6 md:px-8 py-4 border-b theme-border theme-bg-surface">
+              <h2 className="text-sm font-black tracking-wider uppercase theme-text-muted">
                 Current Saved Profile
               </h2>
             </div>
@@ -214,9 +214,9 @@ function ClubProfilePage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="rounded-3xl border border-slate-800 bg-slate-900/60 overflow-hidden">
-          <div className="px-6 md:px-8 py-4 border-b border-slate-800 bg-slate-950/40">
-            <h2 className="text-sm font-black tracking-wider uppercase text-slate-400">
+        <form onSubmit={handleSubmit} className="rounded-3xl border theme-border theme-bg-surface overflow-hidden">
+          <div className="px-6 md:px-8 py-4 border-b theme-border theme-bg-surface">
+            <h2 className="text-sm font-black tracking-wider uppercase theme-text-muted">
               Update Profile
             </h2>
           </div>
@@ -255,23 +255,23 @@ function ClubProfilePage() {
             />
 
             {error && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              <div className="rounded-xl border theme-border-danger theme-bg-danger-soft px-4 py-3 text-sm theme-text-danger">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+              <div className="rounded-xl border theme-border-primary theme-bg-tint px-4 py-3 text-sm theme-text-primary">
                 {success}
               </div>
             )}
           </div>
 
-          <div className="px-6 md:px-8 py-4 border-t border-slate-800 bg-slate-950/40 flex justify-end">
+          <div className="px-6 md:px-8 py-4 border-t theme-border theme-bg-surface flex justify-end">
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 text-sm font-bold text-white transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl theme-bg-primary theme-hover-bg-primary disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 text-sm font-bold theme-text-on-primary transition-colors"
             >
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
               {saving ? "Updating..." : "Update Club"}
