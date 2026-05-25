@@ -6,83 +6,101 @@
 }
 
 /* ==========================================
-   SITE COLOR TOKENS
-   Edit this section to change the whole site palette.
+   SITE COLOR TOKENS (MATTE OBSIDIAN & LAVENDER)
    ========================================== */
 :root {
     color-scheme: dark;
-    --theme-ink: #f8fafc;
-    --theme-muted: #94a3b8;
-    --theme-soft: #64748b;
-    --theme-primary: #059669;
-    --theme-accent: #06b6d4;
-    --theme-page: #020617;
-    --theme-surface: #0f172a;
-    --theme-surface-muted: #1e293b;
-    --theme-surface-strong: #334155;
-    --theme-line: #334155;
-    --theme-line-strong: #475569;
-    --theme-tint: rgb(6 182 212 / 0.1);
-    --theme-tint-strong: rgb(6 182 212 / 0.2);
-    --theme-overlay: rgb(2 6 23 / 0.72);
-    --theme-on-primary: #ffffff;
-    --theme-focus: rgb(6 182 212 / 0.32);
-    --theme-shadow: rgb(0 0 0 / 0.28);
-    --theme-glow: rgb(6 182 212 / 0.45);
-    --theme-card-shadow: none;
-    --theme-input-highlight: rgb(255 255 255 / 0.04);
-    --theme-signature-surface: #ffffff;
-    --theme-body-background:
-            radial-gradient(circle at top left, rgb(6 182 212 / 0.14), transparent 34rem),
-            linear-gradient(180deg, #020617 0%, var(--theme-page) 34rem);
+    /* Typography - Soft Metallic Contrast (Low Eye Strain) */
+    --theme-ink: #f3f4f6;           /* Cool alabaster white - less blinding than pure white */
+    --theme-muted: #cbd5e1;         /* Soft silver slate - extremely easy to read */
+    --theme-soft: #94a3b8;          /* Muted dusk grey */
 
-    --status-success: #22c55e;
-    --status-success-soft: rgb(34 197 94 / 0.12);
-    --status-success-line: rgb(34 197 94 / 0.28);
+    /* Brand Cohesion (Dusk Lavender & Soft Amethyst) */
+    --theme-primary: #a78bfa;       /* Lavender 400 - Soothing, desaturated purple accent */
+    --theme-accent: #c084fc;        /* Amethyst 400 - Perfectly balanced secondary highlight */
+
+    /* Surfaces (Matte Inky Black & Charcoal Velvet) */
+    --theme-page: #09090b;          /* Pure, deep matte charcoal canvas */
+    --theme-surface: #121217;       /* Soft midnight ink overlay for cards and containers */
+    --theme-surface-muted: #1c1c24; /* Elevated container modules */
+    --theme-surface-strong: #272733;/* Focused input backings */
+
+    /* Borders & Accents */
+    --theme-line: #1c1c24;          /* Discrete layout dividers */
+    --theme-line-strong: #272733;
+    --theme-tint: rgb(167 139 250 / 0.05);
+    --theme-tint-strong: rgb(167 139 250 / 0.12);
+    --theme-overlay: rgb(9 9 11 / 0.85);
+    --theme-on-primary: #09090b;    /* Matte black text over lavender buttons for crisp legibility */
+    --theme-focus: rgb(167 139 250 / 0.25);
+    --theme-shadow: rgb(0 0 0 / 0.55);
+    --theme-glow: rgb(167 139 250 / 0.15);
+    --theme-card-shadow: none;
+    --theme-input-highlight: rgb(255 255 255 / 0.02);
+    --theme-signature-surface: #ffffff;
+
+    /* Ambient Nebular Light Source Background */
+    --theme-body-background:
+            radial-gradient(circle at top left, rgb(167 139 250 / 0.06), transparent 45rem),
+            radial-gradient(circle at top right, rgb(192 132 252 / 0.03), transparent 50rem),
+            linear-gradient(180deg, #09090b 0%, var(--theme-page) 100%);
+
+    /* Semantic Status - Calibrated to merge with Lavender tones */
+    --status-success: #34d399;
+    --status-success-soft: rgb(52 211 153 / 0.05);
+    --status-success-line: rgb(52 211 153 / 0.18);
     --status-danger: #f87171;
-    --status-danger-soft: rgb(248 113 113 / 0.12);
-    --status-danger-line: rgb(248 113 113 / 0.28);
-    --status-warning: #f59e0b;
-    --status-warning-soft: rgb(245 158 11 / 0.12);
-    --status-warning-line: rgb(245 158 11 / 0.3);
+    --status-danger-soft: rgb(248 113 113 / 0.05);
+    --status-danger-line: rgb(248 113 113 / 0.18);
+    --status-warning: #fbbf24;
+    --status-warning-soft: rgb(251 191 36 / 0.05);
+    --status-warning-line: rgb(251 191 36 / 0.18);
 }
 
 :root[data-theme="light"] {
     color-scheme: light;
-    --theme-ink: #001e3d;
-    --theme-muted: #3a6088;
-    --theme-soft: #6c91b7;
-    --theme-primary: #0056b3;
-    --theme-accent: #007bff;
-    --theme-page: #f4f8fc;
+    /* Typography */
+    --theme-ink: #0f0f12;           /* Deep obsidian ink */
+    --theme-muted: #3f3f46;         /* Charcoal gray */
+    --theme-soft: #71717a;
+
+    /* Brand Cohesion */
+    --theme-primary: #6d28d9;       /* Deep royal purple for light mode accessibility */
+    --theme-accent: #7e22ce;
+
+    /* Surfaces (Crisp Minimalist Paper) */
+    --theme-page: #fafafa;          /* Bright clean studio background */
     --theme-surface: #ffffff;
-    --theme-surface-muted: #e6f0fa;
-    --theme-surface-strong: #d3e5f7;
-    --theme-line: #cbdffa;
-    --theme-line-strong: #9cc2f2;
-    --theme-tint: #f0f6ff;
-    --theme-tint-strong: #d0e4ff;
-    --theme-overlay: rgb(0 30 61 / 0.45);
+    --theme-surface-muted: #f4f4f5; /* Clean layout breakouts */
+    --theme-surface-strong: #e4e4e7;
+
+    /* Borders & Accents */
+    --theme-line: #e4e4e7;
+    --theme-line-strong: #d4d4d8;
+    --theme-tint: rgb(109 40 217 / 0.04);
+    --theme-tint-strong: rgb(109 40 217 / 0.1);
+    --theme-overlay: rgb(15 15 18 / 0.4);
     --theme-on-primary: #ffffff;
-    --theme-focus: rgb(63 162 246 / 0.35);
-    --theme-shadow: rgb(0 86 179 / 0.16);
-    --theme-glow: rgb(0 123 255 / 0.4);
-    --theme-card-shadow: 0 14px 40px rgb(0 86 179 / 0.08);
-    --theme-input-highlight: rgb(255 255 255 / 0.65);
+    --theme-focus: rgb(109 40 217 / 0.15);
+    --theme-shadow: rgb(15 15 18 / 0.03);
+    --theme-glow: rgb(109 40 217 / 0.1);
+    --theme-card-shadow: 0 14px 36px -10px rgb(15 15 18 / 0.05), 0 4px 12px -4px rgb(15 15 18 / 0.02);
+    --theme-input-highlight: rgb(255 255 255 / 1);
     --theme-signature-surface: #ffffff;
     --theme-body-background:
-            radial-gradient(circle at top left, rgb(208 228 255 / 0.55), transparent 34rem),
-            linear-gradient(180deg, #ffffff 0%, var(--theme-page) 34rem);
+            radial-gradient(circle at top left, rgb(167 139 250 / 0.03), transparent 45rem),
+            linear-gradient(180deg, #ffffff 0%, var(--theme-page) 100%);
 
-    --status-success: #087f5b;
-    --status-success-soft: rgb(8 127 91 / 0.12);
-    --status-success-line: rgb(8 127 91 / 0.25);
-    --status-danger: #c92a2a;
-    --status-danger-soft: rgb(201 42 42 / 0.1);
-    --status-danger-line: rgb(201 42 42 / 0.24);
-    --status-warning: #b7791f;
-    --status-warning-soft: rgb(183 121 31 / 0.12);
-    --status-warning-line: rgb(183 121 31 / 0.28);
+    /* Semantic Status */
+    --status-success: #166534;
+    --status-success-soft: #f0fdf4;
+    --status-success-line: #bbf7d0;
+    --status-danger: #991b1b;
+    --status-danger-soft: #fef2f2;
+    --status-danger-line: #fecaca;
+    --status-warning: #854d0e;
+    --status-warning-soft: #fffbeb;
+    --status-warning-line: #fef3c7;
 }
 
 body {
@@ -238,7 +256,18 @@ body {
 }
 
 .rbc-calendar {
-    color: var(--theme-ink);
+    color: var(--theme-muted);
+    font-family: inherit;
+}
+
+.rbc-header {
+    padding: 14px !important;
+    border-bottom: 1px solid var(--theme-line) !important;
+    color: var(--theme-soft);
+    font-size: 10px;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .rbc-toolbar button,
@@ -246,6 +275,68 @@ body {
 .rbc-time-view,
 .rbc-agenda-view {
     border-color: var(--theme-line);
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view table {
+    border: 1px solid var(--theme-line) !important;
+    border-radius: 1.25rem;
+    background: transparent !important;
+    overflow: hidden;
+}
+
+.rbc-day-bg + .rbc-day-bg {
+    border-left: 1px solid var(--theme-line) !important;
+}
+
+.rbc-month-row + .rbc-month-row {
+    border-top: 1px solid var(--theme-line) !important;
+}
+
+.rbc-off-range-bg {
+    background: var(--theme-surface) !important;
+}
+
+.rbc-today {
+    background: var(--theme-tint) !important;
+}
+
+.rbc-toolbar button {
+    margin: 2px !important;
+    padding: 8px 14px !important;
+    border: 1px solid var(--theme-line) !important;
+    border-radius: 10px !important;
+    background: var(--theme-surface) !important;
+    color: var(--theme-muted) !important;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.rbc-toolbar button:hover {
+    background: var(--theme-surface-muted) !important;
+    color: var(--theme-ink) !important;
+}
+
+.rbc-toolbar button.rbc-active {
+    border-color: var(--theme-accent) !important;
+    background: var(--theme-accent) !important;
+    color: var(--theme-on-primary) !important;
+}
+
+.rbc-toolbar-label {
+    color: var(--theme-ink);
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.rbc-show-more {
+    color: var(--theme-primary) !important;
+    font-size: 10px;
+    font-weight: 700;
 }
 
 .calendar-event-approved {
@@ -259,6 +350,30 @@ body {
     font-weight: 500 !important;
     padding: 0.25rem 0.5rem !important;
     box-shadow: 0 1px 2px var(--theme-shadow) !important;
+}
+
+.theme-signature-overlay {
+    border: 2px solid var(--theme-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.theme-signature-overlay-image {
+    background: var(--theme-signature-surface);
+}
+
+.theme-signature-overlay-empty {
+    background: var(--theme-tint-strong);
+}
+
+.theme-signature-placeholder {
+    color: var(--theme-primary);
+    font-size: 10px;
+    font-weight: 700;
 }
 
 .calendar-event-pending {

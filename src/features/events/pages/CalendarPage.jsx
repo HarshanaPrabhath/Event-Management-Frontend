@@ -279,21 +279,6 @@ function CalendarPage({ source = "dashboard" }) {
         </section>
 
         <div className="theme-bg-surface-muted backdrop-blur-xl border theme-border rounded-[2rem] p-4 md:p-6 shadow-2xl">
-          <style>{`
-            .rbc-calendar { color: var(--theme-muted); font-family: inherit; }
-            .rbc-header { padding: 14px !important; font-weight: 700 !important; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; color: var(--theme-soft); border-bottom: 1px solid var(--theme-line) !important; }
-            .rbc-month-view, .rbc-time-view, .rbc-agenda-view table { border: 1px solid var(--theme-line) !important; background: transparent !important; border-radius: 1.25rem; overflow: hidden; }
-            .rbc-day-bg + .rbc-day-bg { border-left: 1px solid var(--theme-line) !important; }
-            .rbc-month-row + .rbc-month-row { border-top: 1px solid var(--theme-line) !important; }
-            .rbc-off-range-bg { background: var(--theme-surface) !important; }
-            .rbc-today { background: var(--theme-tint) !important; }
-            .rbc-toolbar button { color: var(--theme-muted) !important; border: 1px solid var(--theme-line) !important; background: var(--theme-surface) !important; border-radius: 10px !important; text-transform: uppercase; font-size: 10px; font-weight: 700; padding: 8px 14px !important; margin: 2px !important; transition: all 0.2s; }
-            .rbc-toolbar button:hover { background: var(--theme-surface-muted) !important; color: var(--theme-ink) !important; }
-            .rbc-toolbar button.rbc-active { background: var(--theme-accent) !important; color: var(--theme-on-primary) !important; border-color: var(--theme-accent) !important; }
-            .rbc-toolbar-label { font-weight: 800; font-size: 1.1rem; color: var(--theme-ink); letter-spacing: 0; }
-            .rbc-show-more { color: var(--theme-primary) !important; font-weight: 700; font-size: 10px; }
-          `}</style>
-
           {loading ? (
             <div className="h-[740px] rounded-2xl border theme-border theme-bg-surface animate-pulse" />
           ) : error ? (

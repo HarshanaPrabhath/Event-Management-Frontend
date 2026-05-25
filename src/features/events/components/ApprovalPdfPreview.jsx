@@ -156,27 +156,24 @@ const ApprovalPdfPreview = ({
 
       {overlayStyle && (
         <div
+          className={`theme-signature-overlay ${
+            signatureImageUrl
+              ? "theme-signature-overlay-image"
+              : "theme-signature-overlay-empty"
+          }`}
           style={{
             position: "absolute",
             ...overlayStyle,
-            border: "2px solid var(--theme-primary)",
-            background: signatureImageUrl ? "var(--theme-signature-surface)" : "var(--theme-tint-strong)",
-            pointerEvents: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden",
-            zIndex: 10,
           }}
         >
           {signatureImageUrl ? (
             <img
               src={signatureImageUrl}
               alt="Signature preview"
-              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              className="h-full w-full object-contain"
             />
           ) : (
-            <span style={{ fontSize: "10px", color: "var(--theme-primary)", fontWeight: "bold" }}>SIGN HERE</span>
+            <span className="theme-signature-placeholder">SIGN HERE</span>
           )}
         </div>
       )}
