@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { cloneElement, isValidElement, useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
@@ -332,7 +332,7 @@ function CalendarPage({ source = "dashboard" }) {
 
         {selected && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <div className="absolute inset-0 theme-bg-surface backdrop-blur-md" onClick={() => setSelected(null)} />
+            <div className="absolute inset-0 theme-modal-backdrop" onClick={() => setSelected(null)} />
 
             <div className="relative theme-bg-page border theme-border rounded-[2rem] w-full max-w-xl overflow-hidden shadow-2xl">
               <div className="h-1.5 theme-gradient-primary-r" />
@@ -386,7 +386,7 @@ function ModalDetail({ icon, label, value }) {
   return (
     <div className="flex items-center gap-4 p-4 rounded-xl theme-bg-surface-muted border theme-border">
       <div className="theme-text-primary">
-        {React.isValidElement(icon) ? React.cloneElement(icon, { size: 18 }) : icon}
+        {isValidElement(icon) ? cloneElement(icon, { size: 18 }) : icon}
       </div>
       <div>
         <p className="text-[10px] font-bold theme-text-muted uppercase tracking-[0.15em] mb-1">

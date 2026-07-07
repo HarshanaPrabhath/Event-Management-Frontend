@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Lock, User, ShieldCheck, ArrowRight } from "lucide-react";
+import { ArrowLeft, Lock, User, ShieldCheck, ArrowRight } from "lucide-react";
 import { checkApi, login } from "../../../shared/api/authService";
 
 function LoginPage() {
@@ -11,8 +11,7 @@ function LoginPage() {
 
   const callCheckApi = async () => {
     try {
-      const res = await checkApi();
-      console.info("SYSTEM CHECK:", res || "Online");
+      await checkApi();
     } catch (err) {
       console.error("System check failed:", err);
     }
@@ -43,6 +42,14 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center theme-bg-page relative overflow-hidden font-sans">
+      <Link
+        to="/"
+        className="fixed right-5 top-20 z-50 inline-flex items-center gap-2 rounded-xl border theme-border theme-bg-surface-muted px-4 py-2 text-sm font-bold theme-text theme-card-shadow theme-hover-bg theme-hover-text transition-colors"
+      >
+        Landing Page
+        <ArrowRight size={16} />
+      </Link>
+
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] theme-bg-tint blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] theme-bg-tint blur-[120px] rounded-full" />

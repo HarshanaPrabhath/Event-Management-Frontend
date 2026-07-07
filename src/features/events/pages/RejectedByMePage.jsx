@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RejectedLetterCardDetail } from "../components";
 import { getRejectedByMe } from "../../../shared/api/approvalService";
 
@@ -41,7 +41,6 @@ function RejectedByMePage() {
   return (
     <div className="min-h-screen theme-bg-page p-6 theme-text">
 
-      {/* HEADER */}
       <div className="mb-6 border-b theme-border pb-4">
         <h1 className="text-3xl font-bold theme-text-danger">
           Rejected By Me
@@ -51,7 +50,6 @@ function RejectedByMePage() {
         </p>
       </div>
 
-      {/* EMPTY STATE */}
       {letters.length === 0 ? (
         <div className="text-center theme-text-muted mt-20">
           No rejected letters found

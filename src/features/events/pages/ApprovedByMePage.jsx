@@ -43,7 +43,6 @@ function ApprovedByMePage() {
   return (
     <div className="min-h-screen theme-bg-page p-6 theme-text">
 
-      {/* HEADER */}
       <div className="mb-6 border-b theme-border pb-4">
         <h1 className="text-3xl font-bold theme-text-success">
           Approved By Me
@@ -53,7 +52,6 @@ function ApprovedByMePage() {
         </p>
       </div>
 
-      {/* EMPTY STATE */}
       {letters.length === 0 ? (
         <div className="text-center theme-text-muted mt-20">
           No approved letters found

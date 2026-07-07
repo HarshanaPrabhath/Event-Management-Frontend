@@ -1,4 +1,3 @@
-import React from "react";
 import { 
   CheckCircle2, 
   XCircle, 
@@ -17,7 +16,6 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
 
   return (
     <div className="theme-text flex flex-col h-full">
-      {/* 1. HEADER SECTION */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
           <span className="px-2 py-0.5 theme-bg-tint border theme-border-primary theme-text-primary text-[10px] font-black uppercase tracking-widest rounded">
@@ -32,7 +30,6 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
         </p>
       </div>
 
-      {/* 2. LOGISTICS GRID */}
       <div className="grid grid-cols-2 gap-3 mb-6">
         <InfoTile 
           icon={<Calendar size={14} />} 
@@ -57,7 +54,6 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
         />
       </div>
 
-      {/* 3. TRACKING & STATUS */}
       <div className="space-y-3 mb-8">
         <div className="p-4 theme-bg-surface-muted border theme-border rounded-2xl">
           <p className="text-[10px] font-black theme-text-muted uppercase tracking-widest mb-3">
@@ -67,7 +63,6 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
         </div>
       </div>
 
-      {/* 4. ACTIONS */}
       <div className="flex gap-4 mt-auto">
         <button
           onClick={() => onReject(letter.letterId)}
@@ -89,7 +84,6 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
   );
 };
 
-// Helper component for the grid tiles
 const InfoTile = ({ icon, label, value, subValue }) => (
   <div className="p-3 theme-bg-surface border theme-border rounded-xl">
     <div className="flex items-center gap-2 theme-text-muted mb-1">

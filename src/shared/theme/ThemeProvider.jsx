@@ -7,9 +7,9 @@ const STORAGE_KEY = "eventflow-theme";
 const getInitialTheme = () => {
   try {
     const storedTheme = localStorage.getItem(STORAGE_KEY);
-    return storedTheme === "light" || storedTheme === "dark" ? storedTheme : "dark";
+    return storedTheme === "light" || storedTheme === "dark" ? storedTheme : "light";
   } catch {
-    return "dark";
+    return "light";
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { cloneElement, useState } from "react";
 import { 
   MapPin, 
   Users, 
@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 const PlacesPage = () => {
-  // 1. Mock data or state for API response
   const [placesData] = useState([
     { placeId: 1, placeName: "Auditorium", department: "All", capacity: 450 },
     { placeId: 2, placeName: "Lab11", department: "ICT", capacity: 80 },
@@ -31,7 +30,6 @@ const PlacesPage = () => {
 
   return (
     <div className="p-8 theme-bg-page min-h-screen theme-text">
-      {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-black theme-text tracking-tight uppercase">
@@ -55,14 +53,12 @@ const PlacesPage = () => {
         </div>
       </div>
 
-      {/* STATS OVERVIEW (Optional) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard label="Total Venues" value={placesData.length} icon={<MapPin />} color="blue" />
         <StatCard label="Highest Capacity" value="500" icon={<Users />} color="emerald" />
         <StatCard label="Departments" value="4" icon={<Building2 />} color="amber" />
       </div>
 
-      {/* DATA TABLE */}
       <div className="theme-bg-surface-muted border theme-border rounded-[2rem] overflow-hidden backdrop-blur-xl shadow-2xl">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -121,7 +117,6 @@ const PlacesPage = () => {
   );
 };
 
-// Sub-component for Stats
 const StatCard = ({ label, value, icon, color }) => {
   const colors = {
     blue: "theme-bg-tint theme-text-primary theme-border-primary",
@@ -132,7 +127,7 @@ const StatCard = ({ label, value, icon, color }) => {
   return (
     <div className="p-6 theme-bg-surface-muted border theme-border rounded-3xl flex items-center gap-5 transition-transform hover:-translate-y-1">
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${colors[color]}`}>
-        {React.cloneElement(icon, { size: 24 })}
+        {cloneElement(icon, { size: 24 })}
       </div>
       <div>
         <p className="text-[10px] font-black theme-text-muted uppercase tracking-widest mb-0.5">{label}</p>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LetterCard } from "../components";
 import { getMyLetters } from "../../../shared/api/eventService";
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn, Search } from "lucide-react";
 import { getClubs } from "../../../shared/api/endpoints";

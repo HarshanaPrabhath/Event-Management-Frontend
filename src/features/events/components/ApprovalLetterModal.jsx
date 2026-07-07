@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   X,
   PenTool,
@@ -201,7 +201,7 @@ const ApprovalLetterModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop with blur */}
       <div 
-        className="absolute inset-0 theme-bg-surface backdrop-blur-sm transition-opacity" 
+        className="absolute inset-0 theme-modal-backdrop transition-opacity" 
         onClick={onClose} 
       />
 

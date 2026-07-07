@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { approveLetter, signApproveLetter } from "../../../shared/api/approvalService";
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
 import { getResponsiblePerson } from "../../../shared/api/eventService";
@@ -38,7 +38,6 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
           String(responsiblePerson.responsiblePersonName).toLowerCase());
   };
 
-  // ================= FETCH APPROVAL CONTEXT =================
   useEffect(() => {
     const fetchApprovalContext = async () => {
       if (!letter) return;
@@ -69,7 +68,6 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
     fetchApprovalContext();
   }, [letter]);
 
-  // ================= APPROVE =================
   const handleFinalApprove = async () => {
     if (!isResponsibleApprover && !signaturePos) {
       alert("Please select signature position");
@@ -132,7 +130,6 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
 
   return (
     <>
-      {/* ================= CARD ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 theme-bg-surface border theme-border rounded-[2.5rem] p-8">
         <ApprovalPdfPreview pdfUrl={pdfUrl} />
 
@@ -143,7 +140,6 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
         />
       </div>
 
-      {/* ================= MODAL ================= */}
       {showApproveModal && (
         <ApprovalLetterModal
           pdfUrl={pdfUrl}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ApproversSection from "./ApproversSection";
 import { getResponsiblePerson } from "../../../shared/api/eventService";
 import { Calendar, Clock, MapPin, AlignLeft, FileText, Send, Loader2 } from "lucide-react";
@@ -17,26 +17,22 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
   const handleChange = async (e) => {
     const { name, value } = e.target;
 
-    // 1. Handle non-venue inputs normally
     if (name !== "eventPlace") {
       setValues((prev) => ({ ...prev, [name]: value }));
       return;
     }
 
-    // 2. Handle Venue Selection
     const placeValue = value === "" ? null : value;
 
-    // IF USER SELECTS "SELECT..." OR "NO LOCATION"
     if (!placeValue) {
       setValues((prev) => ({
         ...prev,
         eventPlace: null,
-        approvers: [], // 🔥 CRITICAL: Purges the pipeline if no location
+        approvers: [],
       }));
       return;
     }
 
-    // IF USER SELECTS A VALID LOCATION
     setValues((prev) => ({ ...prev, eventPlace: placeValue }));
     setLoadingApprovers(true);
 
@@ -44,8 +40,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
       const data = await getResponsiblePerson(placeValue);
       if (data?.responsiblePersonName) {
         setValues((prev) => {
-          // When changing locations, we clear existing automated approvers 
-          // to ensure the new location's head is Step 1.
           return {
             ...prev,
             approvers: [
@@ -62,7 +56,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
       }
     } catch (err) {
       console.error("Responsible person error:", err);
-      // Clear list on error to prevent unauthorized location approval
       setValues((prev) => ({ ...prev, approvers: [] }));
     } finally {
       setLoadingApprovers(false);
@@ -79,7 +72,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
       onSubmit={handleSubmit}
       className="max-w-4xl mx-auto theme-bg-surface-muted backdrop-blur-xl border theme-border p-8 rounded-[2rem] space-y-6 theme-text shadow-2xl"
     >
-      {/* HEADER */}
       <div className="flex items-center justify-between border-b theme-border pb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 theme-bg-tint rounded-lg theme-text-primary">
@@ -92,7 +84,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
         </div>
       </div>
 
-      {/* EVENT NAME */}
       <div className="space-y-1.5">
         <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">Event Title</label>
         <input
@@ -105,7 +96,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
         />
       </div>
 
-      {/* LOGISTICS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <FormField label="Date" icon={<Calendar size={14} />}>
           <input
@@ -157,7 +147,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
         </FormField>
       </div>
 
-      {/* DESCRIPTION */}
       <div className="space-y-1.5">
         <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">Description</label>
         <div className="relative">
@@ -174,7 +163,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
         </div>
       </div>
 
-      {/* FILE UPLOAD */}
       <div className="space-y-1.5">
         <label className="text-[10px] font-black theme-text-muted uppercase tracking-widest ml-1">Documentation (PDF)</label>
         <div className="border-2 border-dashed theme-border theme-hover-border-primary rounded-2xl p-4 transition-all theme-bg-surface group text-center">
@@ -188,7 +176,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
         </div>
       </div>
 
-      {/* PIPELINE SECTION */}
       <div className="theme-bg-surface border theme-border rounded-2xl overflow-hidden shadow-inner">
         <div className="p-4 border-b theme-border flex justify-between items-center theme-bg-surface-muted">
           <div className="flex items-center gap-2">
@@ -210,7 +197,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
         </div>
       </div>
 
-      {/* SUBMIT */}
       <button 
         type="submit"
         className="w-full theme-bg-primary theme-hover-bg-primary theme-text-on-primary py-4 rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-2 shadow-xl theme-shadow transition-all active:scale-[0.98]"
@@ -222,7 +208,6 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
   );
 }
 
-// Reusable Input Wrapper
 function FormField({ label, icon, children }) {
   return (
     <div className="space-y-1.5 flex-1">

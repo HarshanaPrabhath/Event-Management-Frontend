@@ -10,7 +10,6 @@ function ToApprovePage() {
   const [selectedId, setSelectedId] = useState(null);
   const [reason, setReason] = useState("");
 
-  // ================= FETCH LETTERS =================
   const fetchData = useCallback(async () => {
     setLoading(true);
 
@@ -39,12 +38,10 @@ function ToApprovePage() {
     fetchData();
   }, [fetchData]);
 
-  // ================= REFRESH AFTER APPROVE =================
   const handleApproveSuccess = () => {
-    fetchData(); // reload list after sign-approve
+    fetchData();
   };
 
-  // ================= REJECT =================
   const openRejectModal = (id) => {
     setSelectedId(id);
     setReason("");
@@ -83,7 +80,7 @@ function ToApprovePage() {
 
       {!loading && letters.length === 0 && (
         <div className="text-center theme-text-muted mt-20">
-          No letters pending approval 🎉
+          No letters pending approval.
         </div>
       )}
 
@@ -93,14 +90,13 @@ function ToApprovePage() {
             key={letter.letterId}
             letter={letter}
             onReject={openRejectModal}
-            onApprove={handleApproveSuccess}   // ✅ IMPORTANT FIX
+            onApprove={handleApproveSuccess}
           />
         ))}
       </div>
 
-      {/* REJECT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 theme-bg-overlay flex items-center justify-center z-50">
+        <div className="fixed inset-0 theme-modal-backdrop flex items-center justify-center z-50">
           <div className="theme-bg-surface w-[400px] p-6 rounded-2xl border theme-border">
 
             <h2 className="text-xl font-bold mb-4">

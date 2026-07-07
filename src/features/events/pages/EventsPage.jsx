@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EventForm } from "../components";
 import {
   createEvent as createEventAPI,
@@ -108,7 +108,6 @@ function EventPage() {
       });
 
       const response = await createEventAPI(formData);
-      console.info("EVENT RESPONSE:", response);
       alert(response || "Event created successfully!");
       setValues(getInitialState());
       setFile(null);
@@ -136,7 +135,7 @@ function EventPage() {
       />
 
       {loading && (
-        <div className="fixed inset-0 theme-bg-overlay flex items-center justify-center z-[60]">
+        <div className="fixed inset-0 theme-modal-backdrop flex items-center justify-center z-[60]">
           <div className="theme-bg-primary px-6 py-3 rounded-full theme-text-on-primary font-bold animate-pulse">
             SUBMITTING...
           </div>

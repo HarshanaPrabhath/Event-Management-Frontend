@@ -1,4 +1,4 @@
-import React from "react";
+import { cloneElement } from "react";
 import {
   Calendar,
   CheckCircle2,
@@ -182,7 +182,7 @@ function ApprovedLetterCardDetail({ letter }) {
 function DetailTile({ icon, label, value }) {
   return (
     <div className="p-4 rounded-[1.5rem] theme-bg-surface border theme-border">
-      <div className="theme-text-muted mb-2">{React.cloneElement(icon, { size: 16 })}</div>
+      <div className="theme-text-muted mb-2">{cloneElement(icon, { size: 16 })}</div>
       <p className="text-[9px] font-black theme-text-muted uppercase tracking-widest mb-1">{label}</p>
       <p className="theme-text text-sm font-bold truncate leading-tight">{value}</p>
     </div>

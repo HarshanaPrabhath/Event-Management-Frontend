@@ -1,94 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
+@theme {
+    --color-theme-page: var(--theme-page);
+    --color-theme-surface: var(--theme-surface);
+    --color-theme-surface-muted: var(--theme-surface-muted);
+    --color-theme-surface-strong: var(--theme-surface-strong);
+    --color-theme-primary: var(--theme-primary);
+    --color-theme-accent: var(--theme-accent);
+    --color-theme-button: var(--theme-button);
+    --color-theme-button-hover: var(--theme-button-hover);
+    --color-theme-ink: var(--theme-ink);
+    --color-theme-muted: var(--theme-muted);
+    --color-theme-soft: var(--theme-soft);
+    --color-theme-line: var(--theme-line);
+}
+
 * {
     font-family: "Poppins", sans-serif;
 }
 
 /* ==========================================
-   SITE COLOR TOKENS (MATTE OBSIDIAN & LAVENDER)
+   SITE COLOR TOKENS (CLEAN BLUE & NEUTRAL)
    ========================================== */
 :root {
-    color-scheme: dark;
-    /* Typography - Soft Metallic Contrast (Low Eye Strain) */
-    --theme-ink: #f3f4f6;           /* Cool alabaster white - less blinding than pure white */
-    --theme-muted: #cbd5e1;         /* Soft silver slate - extremely easy to read */
-    --theme-soft: #94a3b8;          /* Muted dusk grey */
-
-    /* Brand Cohesion (Dusk Lavender & Soft Amethyst) */
-    --theme-primary: #a78bfa;       /* Lavender 400 - Soothing, desaturated purple accent */
-    --theme-accent: #c084fc;        /* Amethyst 400 - Perfectly balanced secondary highlight */
-
-    /* Surfaces (Matte Inky Black & Charcoal Velvet) */
-    --theme-page: #09090b;          /* Pure, deep matte charcoal canvas */
-    --theme-surface: #121217;       /* Soft midnight ink overlay for cards and containers */
-    --theme-surface-muted: #1c1c24; /* Elevated container modules */
-    --theme-surface-strong: #272733;/* Focused input backings */
-
-    /* Borders & Accents */
-    --theme-line: #1c1c24;          /* Discrete layout dividers */
-    --theme-line-strong: #272733;
-    --theme-tint: rgb(167 139 250 / 0.05);
-    --theme-tint-strong: rgb(167 139 250 / 0.12);
-    --theme-overlay: rgb(9 9 11 / 0.85);
-    --theme-on-primary: #09090b;    /* Matte black text over lavender buttons for crisp legibility */
-    --theme-focus: rgb(167 139 250 / 0.25);
-    --theme-shadow: rgb(0 0 0 / 0.55);
-    --theme-glow: rgb(167 139 250 / 0.15);
-    --theme-card-shadow: none;
-    --theme-input-highlight: rgb(255 255 255 / 0.02);
-    --theme-signature-surface: #ffffff;
-
-    /* Ambient Nebular Light Source Background */
-    --theme-body-background:
-            radial-gradient(circle at top left, rgb(167 139 250 / 0.06), transparent 45rem),
-            radial-gradient(circle at top right, rgb(192 132 252 / 0.03), transparent 50rem),
-            linear-gradient(180deg, #09090b 0%, var(--theme-page) 100%);
-
-    /* Semantic Status - Calibrated to merge with Lavender tones */
-    --status-success: #34d399;
-    --status-success-soft: rgb(52 211 153 / 0.05);
-    --status-success-line: rgb(52 211 153 / 0.18);
-    --status-danger: #f87171;
-    --status-danger-soft: rgb(248 113 113 / 0.05);
-    --status-danger-line: rgb(248 113 113 / 0.18);
-    --status-warning: #fbbf24;
-    --status-warning-soft: rgb(251 191 36 / 0.05);
-    --status-warning-line: rgb(251 191 36 / 0.18);
-}
-
-:root[data-theme="light"] {
     color-scheme: light;
     /* Typography */
-    --theme-ink: #0f0f12;           /* Deep obsidian ink */
-    --theme-muted: #3f3f46;         /* Charcoal gray */
-    --theme-soft: #71717a;
+    --theme-ink: #0f172a;
+    --theme-muted: #334155;
+    --theme-soft: #64748b;
 
-    /* Brand Cohesion */
-    --theme-primary: #6d28d9;       /* Deep royal purple for light mode accessibility */
-    --theme-accent: #7e22ce;
+    /* Blue accent system */
+    --theme-primary: #2563eb;
+    --theme-accent: #1d4ed8;
+    --theme-button: #2563eb;
+    --theme-button-hover: #1d4ed8;
 
-    /* Surfaces (Crisp Minimalist Paper) */
-    --theme-page: #fafafa;          /* Bright clean studio background */
+    /* Surfaces */
+    --theme-page: #ffffff;
     --theme-surface: #ffffff;
-    --theme-surface-muted: #f4f4f5; /* Clean layout breakouts */
-    --theme-surface-strong: #e4e4e7;
+    --theme-surface-muted: #f8fafc;
+    --theme-surface-strong: #e2e8f0;
 
-    /* Borders & Accents */
-    --theme-line: #e4e4e7;
-    --theme-line-strong: #d4d4d8;
-    --theme-tint: rgb(109 40 217 / 0.04);
-    --theme-tint-strong: rgb(109 40 217 / 0.1);
-    --theme-overlay: rgb(15 15 18 / 0.4);
+    /* Borders & effects */
+    --theme-line: #e2e8f0;
+    --theme-line-strong: #cbd5e1;
+    --theme-tint: rgb(37 99 235 / 0.07);
+    --theme-tint-strong: rgb(37 99 235 / 0.14);
+    --theme-overlay: rgb(15 23 42 / 0.34);
     --theme-on-primary: #ffffff;
-    --theme-focus: rgb(109 40 217 / 0.15);
-    --theme-shadow: rgb(15 15 18 / 0.03);
-    --theme-glow: rgb(109 40 217 / 0.1);
-    --theme-card-shadow: 0 14px 36px -10px rgb(15 15 18 / 0.05), 0 4px 12px -4px rgb(15 15 18 / 0.02);
+    --theme-focus: rgb(37 99 235 / 0.24);
+    --theme-shadow: rgb(15 23 42 / 0.08);
+    --theme-glow: rgb(37 99 235 / 0.22);
+    --theme-card-shadow: 0 18px 44px -18px rgb(15 23 42 / 0.18), 0 4px 16px -8px rgb(15 23 42 / 0.1);
     --theme-input-highlight: rgb(255 255 255 / 1);
     --theme-signature-surface: #ffffff;
+
     --theme-body-background:
-            radial-gradient(circle at top left, rgb(167 139 250 / 0.03), transparent 45rem),
+            radial-gradient(circle at top left, rgb(37 99 235 / 0.05), transparent 42rem),
             linear-gradient(180deg, #ffffff 0%, var(--theme-page) 100%);
 
     /* Semantic Status */
@@ -103,9 +72,74 @@
     --status-warning-line: #fef3c7;
 }
 
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    /* Typography */
+    --theme-ink: #f8fafc;
+    --theme-muted: #cbd5e1;
+    --theme-soft: #94a3b8;
+
+    /* Blue accent system */
+    --theme-primary: #60a5fa;
+    --theme-accent: #3b82f6;
+    --theme-button: #1d4ed8;
+    --theme-button-hover: #2563eb;
+
+    /* Surfaces */
+    --theme-page: #0f172a;
+    --theme-surface: #111827;
+    --theme-surface-muted: #1e293b;
+    --theme-surface-strong: #334155;
+
+    /* Borders & effects */
+    --theme-line: #334155;
+    --theme-line-strong: #475569;
+    --theme-tint: rgb(59 130 246 / 0.12);
+    --theme-tint-strong: rgb(59 130 246 / 0.2);
+    --theme-overlay: rgb(15 23 42 / 0.68);
+    --theme-on-primary: #ffffff;
+    --theme-focus: rgb(59 130 246 / 0.32);
+    --theme-shadow: rgb(0 0 0 / 0.44);
+    --theme-glow: rgb(59 130 246 / 0.28);
+    --theme-card-shadow: 0 20px 50px -24px rgb(0 0 0 / 0.72);
+    --theme-input-highlight: rgb(255 255 255 / 0.04);
+    --theme-signature-surface: #ffffff;
+
+    --theme-body-background:
+            radial-gradient(circle at top left, rgb(59 130 246 / 0.12), transparent 42rem),
+            radial-gradient(circle at top right, rgb(96 165 250 / 0.08), transparent 46rem),
+            linear-gradient(180deg, #0f172a 0%, var(--theme-page) 100%);
+
+    /* Semantic Status */
+    --status-success: #86efac;
+    --status-success-soft: rgb(34 197 94 / 0.12);
+    --status-success-line: rgb(134 239 172 / 0.32);
+    --status-danger: #fca5a5;
+    --status-danger-soft: rgb(239 68 68 / 0.12);
+    --status-danger-line: rgb(252 165 165 / 0.32);
+    --status-warning: #fde68a;
+    --status-warning-soft: rgb(245 158 11 / 0.12);
+    --status-warning-line: rgb(253 230 138 / 0.32);
+}
+
+html {
+    background: var(--theme-page);
+}
+
 body {
     background: var(--theme-body-background);
     color: var(--theme-ink);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
 }
 
 /* ==========================================
@@ -118,7 +152,7 @@ body {
 .theme-bg-surface-strong { background-color: var(--theme-surface-strong); }
 .theme-bg-tint { background-color: var(--theme-tint); }
 .theme-bg-tint-strong { background-color: var(--theme-tint-strong); }
-.theme-bg-primary { background-color: var(--theme-primary); }
+.theme-bg-primary { background-color: var(--theme-button); }
 .theme-bg-accent { background-color: var(--theme-accent); }
 .theme-bg-overlay { background-color: var(--theme-overlay); }
 .theme-bg-success { background-color: var(--status-success); }
@@ -160,6 +194,12 @@ body {
     box-shadow: var(--theme-card-shadow);
 }
 
+.theme-modal-backdrop {
+    background-color: var(--theme-overlay);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
 .theme-inset-highlight {
     box-shadow: inset 0 1px 0 var(--theme-input-highlight);
 }
@@ -189,7 +229,7 @@ body {
 
 .theme-hover-bg:hover { background-color: var(--theme-surface-muted); }
 .theme-hover-bg-tint:hover { background-color: var(--theme-tint-strong); }
-.theme-hover-bg-primary:hover { background-color: var(--theme-accent); }
+.theme-hover-bg-primary:hover { background-color: var(--theme-button-hover); }
 .theme-hover-text:hover { color: var(--theme-ink); }
 .theme-hover-text-primary:hover { color: var(--theme-primary); }
 .theme-hover-text-danger:hover { color: var(--status-danger); }

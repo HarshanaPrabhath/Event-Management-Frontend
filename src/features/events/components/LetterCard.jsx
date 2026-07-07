@@ -1,4 +1,3 @@
-import React from "react";
 import PdfViewer from "../../../shared/ui/PdfViewer";
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
 import {
@@ -56,10 +55,8 @@ const LetterCard = ({ letter }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 theme-bg-surface backdrop-blur-xl border theme-border rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
       
-      {/* 🟦 DECORATIVE BACKGROUND */}
       <div className="absolute top-0 right-0 w-64 h-64 theme-bg-tint blur-[100px] pointer-events-none" />
 
-      {/* ================= LEFT: PDF ================= */}
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-2 theme-text-muted">
@@ -81,11 +78,9 @@ const LetterCard = ({ letter }) => {
         </div>
       </div>
 
-      {/* ================= RIGHT: DETAILS ================= */}
       <div className="theme-text flex flex-col justify-between py-2">
         <div className="space-y-6">
           
-          {/* HEADER & GLOBAL STATUS */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 rounded-full theme-bg-tint theme-text-primary text-[10px] font-black uppercase border theme-border-primary tracking-widest">
@@ -147,7 +142,6 @@ const LetterCard = ({ letter }) => {
             </div>
           )}
 
-          {/* LOGISTICS GRID */}
           <div className="grid grid-cols-2 gap-3">
             <div className="p-4 theme-bg-surface rounded-2xl border theme-border theme-hover-border transition-colors">
               <p className="text-[9px] theme-text-muted font-black uppercase mb-1 tracking-widest">Event Date</p>
@@ -174,7 +168,6 @@ const LetterCard = ({ letter }) => {
             </div>
           </div>
 
-          {/* SENDER INFO */}
           <div className="flex items-center gap-4 p-4 theme-bg-surface rounded-2xl border theme-border">
              <div className="w-10 h-10 rounded-full theme-bg-tint flex items-center justify-center theme-text-primary">
                <User size={20} />
@@ -205,7 +198,6 @@ const LetterCard = ({ letter }) => {
             </div>
           </div>
 
-          {/* APPROVAL FLOW */}
           <div className="space-y-4 pt-2">
             <div className="flex items-center gap-2 theme-text-muted">
               <History size={14} />

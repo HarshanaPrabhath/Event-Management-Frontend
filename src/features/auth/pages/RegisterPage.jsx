@@ -45,11 +45,9 @@ function RegisterPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center theme-bg-page p-6 overflow-hidden">
-      {/* Glow effects */}
       <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full theme-bg-tint-strong blur-[100px]" />
       <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full theme-bg-tint blur-[100px]" />
 
-      {/* Form container */}
       <div className="relative z-10 w-full max-w-2xl theme-bg-surface-muted border theme-border backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden">
         <form onSubmit={handleSubmit} className="p-8 lg:p-12 space-y-5 theme-text">
           <div className="mb-8">
@@ -61,7 +59,6 @@ function RegisterPage() {
             </p>
           </div>
 
-          {/* Username + Reg Number */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-xs font-semibold theme-text-muted ml-1 uppercase tracking-wider">
@@ -92,7 +89,6 @@ function RegisterPage() {
             </div>
           </div>
 
-          {/* Email */}
           <div className="space-y-2">
             <label className="text-xs font-semibold theme-text-muted ml-1 uppercase tracking-wider">
               Email Address
@@ -108,7 +104,6 @@ function RegisterPage() {
             />
           </div>
 
-          {/* Password */}
           <div className="space-y-2">
             <label className="text-xs font-semibold theme-text-muted ml-1 uppercase tracking-wider">
               Password
@@ -124,7 +119,6 @@ function RegisterPage() {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
