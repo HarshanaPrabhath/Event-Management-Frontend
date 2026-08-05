@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ApproversSection from "./ApproversSection";
-import { getResponsiblePerson } from "../../../shared/api/eventService";
+import { getResponsiblePerson } from "../api/eventService";
 import { Calendar, Clock, MapPin, AlignLeft, FileText, Send, Loader2 } from "lucide-react";
 
 function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit }) {

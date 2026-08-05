@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RejectedLetterCardDetail } from "../components";
-import { getRejectedByMe } from "../../../shared/api/approvalService";
+import { getRejectedByMe } from "../api/approvalService";
 
 function RejectedByMePage() {
   const [letters, setLetters] = useState([]);

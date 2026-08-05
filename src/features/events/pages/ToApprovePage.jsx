@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApprovalLetterCard } from "../components";
-import { getLettersToApprove, rejectLetter } from "../../../shared/api/approvalService";
+import { getLettersToApprove, rejectLetter } from "../api/approvalService";
 
 function ToApprovePage() {
   const [letters, setLetters] = useState([]);

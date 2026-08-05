@@ -12,7 +12,7 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { getDashboardCalendarBookings } from "../../../shared/api/eventService";
+import { getDashboardCalendarBookings } from "../api/eventService";
 import { parseAppDateTime } from "../../../shared/utils/dateTime";
 
 const locales = { "en-US": enUS };

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { UserPlus } from "lucide-react";
-import { registerByAdmin } from "../../../shared/api/authService";
+import { registerByAdmin } from "../api/authService";
 import { hasRole } from "../../../shared/utils/roles";
 
 const ROLE_OPTIONS = ["user", "lecturer", "dean", "secretary", "admin"];

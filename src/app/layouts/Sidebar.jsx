@@ -14,9 +14,9 @@ import {
   UserPlus,
 } from "lucide-react";
 
-import { logoutUser } from "../api/endpoints";
-import ThemeToggle from "./ThemeToggle";
-import { hasRole } from "../utils/roles";
+import { logoutUser } from "../../features/auth/api/authService";
+import ThemeToggle from "../../shared/ui/ThemeToggle";
+import { hasRole } from "../../shared/utils/roles";
 
 const readStoredUser = () => {
   const storedUser = localStorage.getItem("user");

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ApprovedLetterCardDetail } from "../components";
-import { getApprovedByMe } from "../../../shared/api/approvalService";
+import { getApprovedByMe } from "../api/approvalService";
 
 function ApprovedByMePage() {
   const [letters, setLetters] = useState([]);

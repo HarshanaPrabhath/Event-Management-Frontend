@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { LetterCard } from "../components";
-import { getMyLetters } from "../../../shared/api/eventService";
+import { getMyLetters } from "../api/eventService";
 
 function MyLettersPage() {
   const [letters, setLetters] = useState([]);

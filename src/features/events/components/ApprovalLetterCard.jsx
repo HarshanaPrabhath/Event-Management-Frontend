@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { approveLetter, signApproveLetter } from "../../../shared/api/approvalService";
+import { approveLetter, signApproveLetter } from "../api/approvalService";
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
-import { getResponsiblePerson } from "../../../shared/api/eventService";
+import { getResponsiblePerson } from "../api/eventService";
 import ApprovalLetterModal from "./ApprovalLetterModal";
 import ApprovalLetterSummary from "./ApprovalLetterSummary";
 import ApprovalPdfPreview from "./ApprovalPdfPreview";

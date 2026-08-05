@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { register } from "../../../shared/api/authService";
+import { register } from "../api/authService";
 
 function RegisterPage() {
   const [form, setForm] = useState({

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, User, ShieldCheck, ArrowRight } from "lucide-react";
-import { checkApi, login } from "../../../shared/api/authService";
+import { checkApi, login } from "../api/authService";
 
 function LoginPage() {
   const navigate = useNavigate();

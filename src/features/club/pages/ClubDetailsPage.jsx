@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Building2, UserRound, FileText, Target, Rocket } from "lucide-react";
-import { getClubs } from "../../../shared/api/endpoints";
+import { getClubs } from "../api/clubService";
 import { ClubExecutiveBoardPanel } from "../components";
 import { parseExecutiveBoard, resolveImageUrl } from "../lib/clubUtils";
 

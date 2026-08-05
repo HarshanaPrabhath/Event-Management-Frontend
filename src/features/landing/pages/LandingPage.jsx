@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn, Search } from "lucide-react";
-import { getClubs } from "../../../shared/api/endpoints";
+import { getClubs } from "../../club/api/clubService";
 import { ClubCard } from "../components";
 import CalendarPage from "../../events/pages/CalendarPage";
 

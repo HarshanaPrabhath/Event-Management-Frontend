@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Save, Loader2 } from "lucide-react";
-import { getMyClub, updateMyClub, updateMyClubBgImage } from "../../../shared/api/endpoints";
+import { getMyClub, updateMyClub, updateMyClubBgImage } from "../api/clubService";
 import {
   BackgroundImageDisplay,
   BackgroundImagePicker,
