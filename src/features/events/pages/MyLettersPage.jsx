@@ -1,30 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LetterCard } from "../components";
 import { getMyLetters } from "../api/eventService";
 
 function MyLettersPage() {
   const [letters, setLetters] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const data = await getMyLetters();
+
+      const list = Array.isArray(data)
+        ? data
+        : data?.data
+        ? data.data
+        : [];
+
+      setLetters(list);
+    } catch (err) {
+      console.error("ERROR:", err.message);
+      setLetters([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getMyLetters();
-
-        const list = Array.isArray(data)
-          ? data
-          : data?.data
-          ? data.data
-          : [];
-
-        setLetters(list);
-      } catch (err) {
-        console.error("ERROR:", err.message);
-        setLetters([]);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return (
     <div className="relative min-h-screen theme-bg-page p-6 space-y-8 overflow-hidden">
@@ -51,17 +56,19 @@ function MyLettersPage() {
 
       {/* Letters List */}
       <main className="relative z-10 space-y-6">
-        {letters.length > 0 ? (
+        {loading && <p className="theme-text-muted">Loading letters...</p>}
+
+        {!loading && letters.length > 0 ? (
           letters.map((letter) => (
-            <LetterCard key={letter.letterId} letter={letter} />
+            <LetterCard key={letter.letterId} letter={letter} onChanged={fetchData} />
           ))
-        ) : (
+        ) : !loading ? (
           <div className="text-center py-24 theme-bg-surface-muted border border-dashed theme-border rounded-3xl">
             <p className="theme-text-muted">
               No documents found in your history.
             </p>
           </div>
-        )}
+        ) : null}
       </main>
 
     </div>

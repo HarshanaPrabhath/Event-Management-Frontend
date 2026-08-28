@@ -14,11 +14,13 @@ import {
 import PdfViewer from "../../../shared/ui/PdfViewer";
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
 import { formatAppDate, formatAppDateTime, formatAppTime } from "../../../shared/utils/dateTime";
+import { getStatusBadge } from "../utils/statusBadge";
 
 function RejectedLetterCardDetail({ letter }) {
   if (!letter) return null;
 
   const pdfUrl = buildServerFileUrl(letter.pdfPath);
+  const statusBadge = getStatusBadge(letter.globalStatus || "REJECTED");
   const previousApprovers = Array.isArray(letter.previousApprovers)
     ? [...letter.previousApprovers].sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0))
     : [];
@@ -61,10 +63,10 @@ function RejectedLetterCardDetail({ letter }) {
       <div className="flex flex-col space-y-5">
         <div className="space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="px-3 py-1 rounded-full theme-bg-danger-soft border theme-border-danger theme-text-danger inline-flex items-center gap-2">
+            <div className={`px-3 py-1 rounded-full border inline-flex items-center gap-2 ${statusBadge.className}`}>
               <ShieldAlert size={14} />
               <span className="text-[10px] font-black uppercase tracking-widest">
-                {letter.globalStatus || "REJECTED"}
+                {statusBadge.label}
               </span>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-widest theme-text-muted">
@@ -118,7 +120,7 @@ function RejectedLetterCardDetail({ letter }) {
         </div>
 
         {myAction && (
-          <div className="rounded-2xl border theme-border-primary theme-bg-tint p-4">
+          <div className="rounded-2xl border theme-border-primary theme-bg-tint-strong p-4">
             <p className="text-[10px] font-black uppercase tracking-widest theme-text-primary">My Action</p>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs theme-text">
               <p>

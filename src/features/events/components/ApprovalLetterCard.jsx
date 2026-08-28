@@ -6,7 +6,7 @@ import ApprovalLetterModal from "./ApprovalLetterModal";
 import ApprovalLetterSummary from "./ApprovalLetterSummary";
 import ApprovalPdfPreview from "./ApprovalPdfPreview";
 
-const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
+const ApprovalLetterCard = ({ letter, onReject, onApprove, onReturnToSecretary }) => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [remark, setRemark] = useState("");
   const [signaturePos, setSignaturePos] = useState(null);
@@ -44,6 +44,12 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
 
       setSignaturePos(null);
       setBookingConflict(null);
+
+      // No venue requested -> no place-responsible step, so nothing to look up.
+      if (!letter.eventPlace) {
+        setIsResponsibleApprover(false);
+        return;
+      }
 
       try {
         const responsiblePerson = await getResponsiblePerson(letter.eventPlace);
@@ -137,6 +143,7 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove }) => {
           letter={letter}
           onReject={onReject}
           onOpenApproveModal={openApproveModal}
+          onReturnToSecretary={onReturnToSecretary}
         />
       </div>
 

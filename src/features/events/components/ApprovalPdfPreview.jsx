@@ -1,22 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import PdfViewer from "../../../shared/ui/PdfViewer";
 
-const SIGNATURE_WIDTH = 150;
-const SIGNATURE_HEIGHT = 50;
+// Signature box size, expressed as a fraction of the page so it stays stable at any zoom level.
+const SIGNATURE_WIDTH_RATIO = 0.24;
+const SIGNATURE_ASPECT = 3; // width : height
 
 const getPageIndex = (pageLayer) => {
   const testId = pageLayer.getAttribute("data-testid") || "";
   const match = testId.match(/core__page-layer-(\d+)/);
 
   return match ? Number(match[1]) : 0;
-};
-
-const getPageScale = (pageLayer) => {
-  const scale = Number.parseFloat(
-    window.getComputedStyle(pageLayer).getPropertyValue("--scale-factor")
-  );
-
-  return Number.isFinite(scale) && scale > 0 ? scale : 1;
 };
 
 const findPageLayerAtPoint = (container, clientX, clientY) => {
@@ -48,6 +41,9 @@ const ApprovalPdfPreview = ({
   const containerRef = useRef(null);
   const [overlayStyle, setOverlayStyle] = useState(null);
 
+  // The whole placement pipeline works in normalized page coordinates (0..1, TOP_LEFT origin),
+  // which are independent of the viewer's zoom level. The backend resolves them against the real
+  // PDF media box, so the on-screen overlay below and the stamped signature always line up.
   const updateOverlayStyle = useCallback(() => {
     const container = containerRef.current;
 
@@ -65,15 +61,14 @@ const ApprovalPdfPreview = ({
       return;
     }
 
-    const scale = getPageScale(pageLayer);
     const containerRect = container.getBoundingClientRect();
     const pageRect = pageLayer.getBoundingClientRect();
 
     setOverlayStyle({
-      left: pageRect.left - containerRect.left + signaturePosition.x * scale,
-      top: pageRect.top - containerRect.top + signaturePosition.y * scale,
-      width: signaturePosition.width * scale,
-      height: signaturePosition.height * scale,
+      left: pageRect.left - containerRect.left + signaturePosition.nx * pageRect.width,
+      top: pageRect.top - containerRect.top + signaturePosition.ny * pageRect.height,
+      width: signaturePosition.nw * pageRect.width,
+      height: signaturePosition.nh * pageRect.height,
     });
   }, [signaturePosition]);
 
@@ -116,26 +111,27 @@ const ApprovalPdfPreview = ({
     if (!pageLayer) return;
 
     const pageRect = pageLayer.getBoundingClientRect();
-    const scale = getPageScale(pageLayer);
-    const pageWidth = pageRect.width / scale;
-    const pageHeight = pageRect.height / scale;
-    const maxX = pageWidth - SIGNATURE_WIDTH;
-    const maxY = pageHeight - SIGNATURE_HEIGHT;
-    const x = clamp((event.clientX - pageRect.left) / scale, 0, maxX);
-    const y = clamp((event.clientY - pageRect.top) / scale, 0, maxY);
-    const nx = pageWidth > 0 ? x / pageWidth : 0;
-    const ny = pageHeight > 0 ? y / pageHeight : 0;
-    const nw = pageWidth > 0 ? SIGNATURE_WIDTH / pageWidth : 0;
-    const nh = pageHeight > 0 ? SIGNATURE_HEIGHT / pageHeight : 0;
+    if (pageRect.width <= 0 || pageRect.height <= 0) return;
+
+    const nw = SIGNATURE_WIDTH_RATIO;
+    // Keep the box aspect ratio constant on screen: its height as a fraction of page height
+    // depends on the page's own aspect ratio.
+    const nh = (SIGNATURE_WIDTH_RATIO / SIGNATURE_ASPECT) * (pageRect.width / pageRect.height);
+
+    // Anchor the click at the centre of the signature box, then keep the box on the page.
+    const nx = clamp(
+      (event.clientX - pageRect.left) / pageRect.width - nw / 2,
+      0,
+      1 - nw
+    );
+    const ny = clamp(
+      (event.clientY - pageRect.top) / pageRect.height - nh / 2,
+      0,
+      1 - nh
+    );
 
     onSelectSignaturePosition({
       pageIndex: getPageIndex(pageLayer),
-      x: Math.round(x),
-      y: Math.round(y),
-      width: SIGNATURE_WIDTH,
-      height: SIGNATURE_HEIGHT,
-      pageWidth: Math.round(pageWidth),
-      pageHeight: Math.round(pageHeight),
       nx: Number(nx.toFixed(4)),
       ny: Number(ny.toFixed(4)),
       nw: Number(nw.toFixed(4)),

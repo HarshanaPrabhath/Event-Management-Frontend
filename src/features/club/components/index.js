@@ -4,5 +4,6 @@ export { default as BackgroundImageDisplay } from "./BackgroundImageDisplay";
 export { default as BackgroundImagePicker } from "./BackgroundImagePicker";
 export { default as ClubExecutiveBoardPanel } from "./ClubExecutiveBoardPanel";
 export { default as ClubPageHeader } from "./ClubPageHeader";
+export { default as EditClubModal } from "./EditClubModal";
 export { default as FormField } from "./FormField";
 export { default as ReadOnlyField } from "./ReadOnlyField";

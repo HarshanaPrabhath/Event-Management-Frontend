@@ -6,6 +6,18 @@ export const createClub = (payload) =>
 export const getClubSecretaries = () =>
   apiClient.get("/admin/clubs/secretaries");
 
+export const getClubSeniorTreasurers = () =>
+  apiClient.get("/admin/clubs/senior-treasurers");
+
+export const getClubsAdmin = () =>
+  apiClient.get("/admin/clubs");
+
+export const updateClubAdmin = (clubId, payload) =>
+  apiClient.put(`/admin/clubs/${clubId}`, payload);
+
+export const deleteClubAdmin = (clubId) =>
+  apiClient.delete(`/admin/clubs/${clubId}`);
+
 export const getClubs = () =>
   apiClient.get("/clubs");
 

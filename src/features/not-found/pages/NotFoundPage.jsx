@@ -5,7 +5,7 @@ function NotFoundPage() {
   return (
     <div className="min-h-screen flex items-center justify-center theme-bg-page theme-text px-6 py-12 theme-selection">
       <div className="w-full max-w-md text-center rounded-[2rem] border theme-border theme-bg-surface-muted p-8 theme-card-shadow">
-        <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl border theme-border-primary theme-bg-tint">
+        <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl border theme-border-primary theme-bg-tint-strong">
           <AlertTriangle className="h-12 w-12 theme-text-primary" />
         </div>
 

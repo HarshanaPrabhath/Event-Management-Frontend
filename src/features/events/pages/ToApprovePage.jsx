@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApprovalLetterCard } from "../components";
-import { getLettersToApprove, rejectLetter } from "../api/approvalService";
+import { getLettersToApprove, rejectLetter, returnLetterToSecretary } from "../api/approvalService";
 
 function ToApprovePage() {
   const [letters, setLetters] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState("reject"); // "reject" | "return"
   const [selectedId, setSelectedId] = useState(null);
   const [reason, setReason] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -43,16 +45,29 @@ function ToApprovePage() {
   };
 
   const openRejectModal = (id) => {
+    setModalMode("reject");
     setSelectedId(id);
     setReason("");
     setShowModal(true);
   };
 
-  const confirmReject = async () => {
+  const openReturnModal = (id) => {
+    setModalMode("return");
+    setSelectedId(id);
+    setReason("");
+    setShowModal(true);
+  };
+
+  const confirmModal = async () => {
     if (!reason.trim()) return;
 
+    setSubmitting(true);
     try {
-      await rejectLetter(selectedId, reason);
+      if (modalMode === "return") {
+        await returnLetterToSecretary(selectedId, reason);
+      } else {
+        await rejectLetter(selectedId, reason);
+      }
 
       setLetters((prev) =>
         prev.filter((l) => l.letterId !== selectedId)
@@ -62,7 +77,10 @@ function ToApprovePage() {
       setSelectedId(null);
       setReason("");
     } catch (err) {
-      console.error("Reject error:", err.message);
+      console.error(`${modalMode === "return" ? "Return" : "Reject"} error:`, err.message);
+      alert(err?.response?.data?.message || err.message || "Action failed");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -91,6 +109,7 @@ function ToApprovePage() {
             letter={letter}
             onReject={openRejectModal}
             onApprove={handleApproveSuccess}
+            onReturnToSecretary={openReturnModal}
           />
         ))}
       </div>
@@ -100,14 +119,18 @@ function ToApprovePage() {
           <div className="theme-bg-surface w-[400px] p-6 rounded-2xl border theme-border">
 
             <h2 className="text-xl font-bold mb-4">
-              Reject Letter
+              {modalMode === "return" ? "Return to Secretary" : "Reject Letter"}
             </h2>
 
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="w-full h-28 p-3 rounded-lg theme-bg-surface-muted border theme-border"
-              placeholder="Enter rejection reason..."
+              placeholder={
+                modalMode === "return"
+                  ? "Explain what needs to change before resending..."
+                  : "Enter rejection reason..."
+              }
             />
 
             <div className="flex justify-end gap-3 mt-4">
@@ -120,10 +143,15 @@ function ToApprovePage() {
               </button>
 
               <button
-                onClick={confirmReject}
-                className="theme-bg-danger theme-text-on-primary px-4 py-2 rounded"
+                onClick={confirmModal}
+                disabled={submitting}
+                className="theme-bg-danger theme-text-on-primary px-4 py-2 rounded disabled:opacity-60"
               >
-                Reject
+                {submitting
+                  ? "Submitting..."
+                  : modalMode === "return"
+                  ? "Send to Secretary"
+                  : "Reject"}
               </button>
 
             </div>

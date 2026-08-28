@@ -154,7 +154,7 @@ function AdminCreateUserPage() {
           )}
 
           {message && (
-            <div className="rounded-xl border theme-border-primary theme-bg-tint px-4 py-3 text-sm theme-text-primary">
+            <div className="rounded-xl border theme-border-primary theme-bg-tint-strong px-4 py-3 text-sm theme-text-primary">
               {message}
             </div>
           )}

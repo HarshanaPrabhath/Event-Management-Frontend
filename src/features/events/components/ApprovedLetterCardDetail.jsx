@@ -13,11 +13,13 @@ import {
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
 import { formatAppDate, formatAppDateTime, formatAppTime } from "../../../shared/utils/dateTime";
 import PdfViewer from "../../../shared/ui/PdfViewer";
+import { getStatusBadge } from "../utils/statusBadge";
 
 function ApprovedLetterCardDetail({ letter }) {
   if (!letter) return null;
 
   const pdfUrl = buildServerFileUrl(letter.pdfPath);
+  const statusBadge = getStatusBadge(letter.globalStatus || "APPROVED");
   const previousApprovers = Array.isArray(letter.previousApprovers)
     ? [...letter.previousApprovers].sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0))
     : [];
@@ -52,10 +54,10 @@ function ApprovedLetterCardDetail({ letter }) {
       <div className="flex flex-col space-y-5">
         <div className="space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="px-3 py-1 rounded-full theme-bg-tint border theme-border-primary theme-text-primary inline-flex items-center gap-2">
+            <div className={`px-3 py-1 rounded-full border inline-flex items-center gap-2 ${statusBadge.className}`}>
               <ShieldCheck size={14} />
               <span className="text-[10px] font-black uppercase tracking-widest">
-                {letter.globalStatus || "APPROVED"}
+                {statusBadge.label}
               </span>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-widest theme-text-muted">
@@ -73,7 +75,7 @@ function ApprovedLetterCardDetail({ letter }) {
         </div>
 
         {letter.approvalNote && (
-          <div className="rounded-2xl border theme-border-primary theme-bg-tint px-4 py-3">
+          <div className="rounded-2xl border theme-border-primary theme-bg-tint-strong px-4 py-3">
             <p className="text-[10px] font-black uppercase tracking-widest theme-text-primary">Approval Note</p>
             <p className="mt-1 text-sm theme-text-primary">{letter.approvalNote}</p>
           </div>
@@ -101,7 +103,7 @@ function ApprovedLetterCardDetail({ letter }) {
         </div>
 
         {myAction && (
-          <div className="rounded-2xl border theme-border-primary theme-bg-tint p-4">
+          <div className="rounded-2xl border theme-border-primary theme-bg-tint-strong p-4">
             <p className="text-[10px] font-black uppercase tracking-widest theme-text-primary">My Action</p>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs theme-text">
               <p>
@@ -145,7 +147,7 @@ function ApprovedLetterCardDetail({ letter }) {
                   className="flex items-center justify-between p-4 rounded-2xl theme-bg-surface border theme-border"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl theme-bg-tint flex items-center justify-center theme-text-primary border theme-border-primary">
+                    <div className="w-8 h-8 rounded-xl theme-bg-tint-strong flex items-center justify-center theme-text-primary border theme-border-primary">
                       <CheckCircle2 size={14} />
                     </div>
                     <div>

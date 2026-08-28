@@ -75,7 +75,7 @@ const PlacesPage = () => {
                 <td className="px-8 py-5 theme-text-muted font-mono text-xs">#{place.placeId}</td>
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl theme-bg-tint flex items-center justify-center theme-text-primary border theme-border-primary">
+                    <div className="w-10 h-10 rounded-xl theme-bg-tint-strong flex items-center justify-center theme-text-primary border theme-border-primary">
                       <MapPin size={18} />
                     </div>
                     <span className="font-bold theme-text text-sm tracking-wide">{place.placeName}</span>
@@ -84,8 +84,8 @@ const PlacesPage = () => {
                 <td className="px-8 py-5">
                   <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${
                     place.department === 'All' 
-                    ? 'theme-bg-surface-muted theme-border theme-text-muted' 
-                    : 'theme-bg-tint theme-border-primary theme-text-primary'
+                    ? 'theme-bg-surface-muted theme-border theme-text-muted'
+                    : 'theme-bg-tint-strong theme-border-primary theme-text-primary'
                   }`}>
                     {place.department}
                   </span>
@@ -119,8 +119,8 @@ const PlacesPage = () => {
 
 const StatCard = ({ label, value, icon, color }) => {
   const colors = {
-    blue: "theme-bg-tint theme-text-primary theme-border-primary",
-    emerald: "theme-bg-tint theme-text-primary theme-border-primary",
+    blue: "theme-bg-tint-strong theme-text-primary theme-border-primary",
+    emerald: "theme-bg-tint-strong theme-text-primary theme-border-primary",
     amber: "theme-bg-warning-soft theme-text-warning theme-border-warning",
   };
   

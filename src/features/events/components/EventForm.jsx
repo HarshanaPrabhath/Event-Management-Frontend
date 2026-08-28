@@ -74,7 +74,7 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
     >
       <div className="flex items-center justify-between border-b theme-border pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 theme-bg-tint rounded-lg theme-text-primary">
+          <div className="p-2 theme-bg-tint-strong rounded-lg theme-text-primary">
             <FileText size={20} />
           </div>
           <div>

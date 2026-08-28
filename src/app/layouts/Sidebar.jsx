@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   House,
@@ -12,9 +12,15 @@ import {
   LogOut,
   Building2,
   UserPlus,
+  Settings2,
 } from "lucide-react";
 
 import { logoutUser } from "../../features/auth/api/authService";
+import {
+  getApprovedByMe,
+  getLettersToApprove,
+  getRejectedByMe,
+} from "../../features/events/api/approvalService";
 import ThemeToggle from "../../shared/ui/ThemeToggle";
 import { hasRole } from "../../shared/utils/roles";
 
@@ -37,9 +43,47 @@ function Sidebar() {
   const roles = user?.roles || [];
   const isAdmin = hasRole(roles, "ROLE_ADMIN");
   const isSecretary = hasRole(roles, "ROLE_SECRETARY");
-  const isApprover = !["ROLE_SECRETARY", "ROLE_ADMIN", "ROLE_USER"].some((role) =>
+
+  // Approver by global role (lecturer, dean, senior treasurer, ...).
+  const isRoleApprover = !["ROLE_SECRETARY", "ROLE_ADMIN", "ROLE_USER"].some((role) =>
     hasRole(roles, role)
   );
+
+  // Venue/office responsible persons are modelled as plain ROLE_USER + Place.responsiblePerson,
+  // so they have no approver AppRole. Detect them by probing the approval queues: if the backend
+  // has ever routed a letter to this user for approval, surface the "Review & Approvals" section.
+  const [hasApprovalActivity, setHasApprovalActivity] = useState(false);
+
+  useEffect(() => {
+    if (isRoleApprover || !user) return;
+
+    let cancelled = false;
+
+    const toList = (data) =>
+      Array.isArray(data)
+        ? data
+        : Array.isArray(data?.data)
+        ? data.data
+        : Array.isArray(data?.content)
+        ? data.content
+        : [];
+
+    Promise.allSettled([getLettersToApprove(), getApprovedByMe(), getRejectedByMe()])
+      .then((results) => {
+        if (cancelled) return;
+        const anyLetters = results.some(
+          (result) => result.status === "fulfilled" && toList(result.value).length > 0
+        );
+        if (anyLetters) setHasApprovalActivity(true);
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isRoleApprover, user]);
+
+  const isApprover = isRoleApprover || hasApprovalActivity;
 
   const sections = useMemo(() => {
     const baseSections = [
@@ -120,6 +164,11 @@ function Sidebar() {
               name: "Club Create",
               path: "/dashboard/club-create",
               icon: <Building2 size={18} />,
+            },
+            {
+              name: "Manage Clubs",
+              path: "/dashboard/manage-clubs",
+              icon: <Settings2 size={18} />,
             },
             {
               name: "Create User",
@@ -220,7 +269,7 @@ const SidebarLink = ({ item }) => (
     className={({ isActive }) =>
       `flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
         isActive
-          ? "theme-bg-tint theme-text-primary border theme-border-primary"
+          ? "theme-bg-tint-strong theme-text-primary border theme-border-primary"
           : "theme-text-muted theme-hover-bg theme-hover-text"
       }`
     }

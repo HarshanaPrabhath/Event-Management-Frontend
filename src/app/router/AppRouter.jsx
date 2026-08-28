@@ -12,7 +12,7 @@ import {
 } from "../../features/events/pages";
 import { PlacesPage } from "../../features/places/pages";
 import { NotFoundPage } from "../../features/not-found/pages";
-import { ClubCreatePage, ClubDetailsPage, ClubProfilePage } from "../../features/club/pages";
+import { ClubCreatePage, ClubDetailsPage, ClubProfilePage, ManageClubsPage } from "../../features/club/pages";
 import { LandingPage } from "../../features/landing/pages";
 import ThemeToggle from "../../shared/ui/ThemeToggle";
 
@@ -87,6 +87,7 @@ function AppRouter() {
           <Route path="approved-by-me" element={<ApprovedByMePage />} />
           <Route path="rejected-by-me" element={<RejectedByMePage />} />
           <Route path="club-create" element={<ClubCreatePage />} />
+          <Route path="manage-clubs" element={<ManageClubsPage />} />
           <Route path="users-create" element={<AdminCreateUserPage />} />
           <Route path="my-club" element={<ClubProfilePage />} />
           <Route path="*" element={<Navigate to="events" replace />} />

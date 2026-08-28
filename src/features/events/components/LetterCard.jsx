@@ -1,5 +1,9 @@
+import { useState } from "react";
 import PdfViewer from "../../../shared/ui/PdfViewer";
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
+import { cancelLetter } from "../api/eventService";
+import { useResendLetter } from "../hooks/useResendLetter";
+import ResendLetterModal from "./ResendLetterModal";
 import {
   Calendar,
   Clock,
@@ -14,17 +18,54 @@ import {
   CheckCircle2,
   CircleDot,
   Circle,
+  RefreshCcw,
+  Ban,
+  Undo2,
 } from "lucide-react";
 import {
   formatAppDate,
   formatAppDateTime,
   formatAppTime,
 } from "../../../shared/utils/dateTime";
+import { getStatusBadge } from "../utils/statusBadge";
 
-const LetterCard = ({ letter }) => {
+const LetterCard = ({ letter, onChanged }) => {
+  const [showResendModal, setShowResendModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const { loading: resending, submitResend } = useResendLetter();
+
   if (!letter) return null;
 
+  const handleResend = async (values, file) => {
+    try {
+      await submitResend(letter.letterId, values, file);
+      setShowResendModal(false);
+      if (onChanged) onChanged();
+    } catch (err) {
+      console.error("Resend error:", err);
+      alert(err?.response?.data?.message || err.message || "Failed to resend letter");
+    }
+  };
+
+  const handleCancel = async () => {
+    if (!window.confirm("Cancel this letter? This cannot be undone.")) return;
+
+    const reason = window.prompt("Optional reason for cancelling this letter:", "") || "";
+
+    setCancelling(true);
+    try {
+      await cancelLetter(letter.letterId, reason);
+      if (onChanged) onChanged();
+    } catch (err) {
+      console.error("Cancel error:", err);
+      alert(err?.response?.data?.message || err.message || "Failed to cancel letter");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
   const pdfUrl = buildServerFileUrl(letter.pdfPath);
+  const statusBadge = getStatusBadge(letter.globalStatus);
   const conflictSource = letter.bookingConflict || letter.conflictDetails || letter;
   const conflicts = Array.isArray(conflictSource?.conflicts)
     ? conflictSource.conflicts
@@ -53,8 +94,9 @@ const LetterCard = ({ letter }) => {
     null;
   
   return (
+    <>
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 theme-bg-surface backdrop-blur-xl border theme-border rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-      
+
       <div className="absolute top-0 right-0 w-64 h-64 theme-bg-tint blur-[100px] pointer-events-none" />
 
       <div className="space-y-4">
@@ -83,13 +125,60 @@ const LetterCard = ({ letter }) => {
           
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full theme-bg-tint theme-text-primary text-[10px] font-black uppercase border theme-border-primary tracking-widest">
-                {letter.globalStatus}
+              <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border tracking-widest ${statusBadge.className}`}>
+                {statusBadge.label}
               </span>
               <span className="text-[10px] font-bold uppercase tracking-widest theme-text-muted">
                 Letter #{letter.letterId}
               </span>
+
+              {(letter.canResend || letter.canCancel) && (
+                <div className="ml-auto flex items-center gap-2">
+                  {letter.canResend && (
+                    <button
+                      type="button"
+                      onClick={() => setShowResendModal(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl theme-bg-primary theme-hover-bg-primary theme-text-on-primary text-[10px] font-black uppercase tracking-widest transition-colors"
+                    >
+                      <RefreshCcw size={12} /> Resend
+                    </button>
+                  )}
+                  {letter.canCancel && (
+                    <button
+                      type="button"
+                      disabled={cancelling}
+                      onClick={handleCancel}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl theme-bg-surface-muted theme-hover-bg-tint border theme-border theme-hover-border-danger theme-text-muted theme-hover-text-danger text-[10px] font-black uppercase tracking-widest transition-colors disabled:opacity-60"
+                    >
+                      <Ban size={12} /> {cancelling ? "Cancelling..." : "Cancel"}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
+
+            {letter.returnStage && (
+              <div className="rounded-2xl border theme-border-warning theme-bg-warning-soft p-4">
+                <div className="flex items-start gap-3">
+                  <Undo2 size={18} className="mt-0.5 shrink-0 theme-text-warning" />
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-widest theme-text-warning">
+                      {letter.returnStage === "SECRETARY"
+                        ? "Returned to You for Revision"
+                        : "Bounced Back to Senior Treasurer"}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed theme-text-warning">
+                      {letter.returnStage === "SECRETARY"
+                        ? "A downstream approver rejected this letter and the senior treasurer sent it back to you. Update the details and resend it, or cancel it."
+                        : "A downstream approver rejected this letter. It's back with the senior treasurer, who can re-forward it or send it back to you."}
+                    </p>
+                    {letter.rejectionReason && (
+                      <p className="mt-2 text-xs italic theme-text-warning">"{letter.rejectionReason}"</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {hasBookingConflict && (
               <div className="rounded-2xl border theme-border-warning theme-bg-warning-soft p-4">
@@ -169,7 +258,7 @@ const LetterCard = ({ letter }) => {
           </div>
 
           <div className="flex items-center gap-4 p-4 theme-bg-surface rounded-2xl border theme-border">
-             <div className="w-10 h-10 rounded-full theme-bg-tint flex items-center justify-center theme-text-primary">
+             <div className="w-10 h-10 rounded-full theme-bg-tint-strong flex items-center justify-center theme-text-primary">
                <User size={20} />
              </div>
              <div>
@@ -206,9 +295,9 @@ const LetterCard = ({ letter }) => {
 
             <div className="flex flex-col gap-2">
               {previousApprovers.map((approver, index) => (
-                <div key={`${approver.stepOrder}-${approver.regNumber}-${index}`} className="flex items-center justify-between p-4 theme-bg-tint border theme-border-primary rounded-2xl">
+                <div key={`${approver.stepOrder}-${approver.regNumber}-${index}`} className="flex items-center justify-between p-4 theme-bg-tint-strong border theme-border-primary rounded-2xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg theme-bg-tint-strong flex items-center justify-center theme-text-primary">
+                    <div className="w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center theme-text-primary border theme-border-primary">
                       <CheckCircle2 size={16} />
                     </div>
                     <div>
@@ -226,9 +315,9 @@ const LetterCard = ({ letter }) => {
               ))}
 
               {letter.currentApprover && (
-                <div className="flex items-center justify-between p-4 theme-bg-tint border theme-border-primary rounded-2xl">
+                <div className="flex items-center justify-between p-4 theme-bg-tint-strong border theme-border-primary rounded-2xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg theme-bg-tint-strong flex items-center justify-center theme-text-primary">
+                    <div className="w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center theme-text-primary border theme-border-primary">
                       <CircleDot size={16} />
                     </div>
                     <div>
@@ -272,6 +361,16 @@ const LetterCard = ({ letter }) => {
         </div>
       </div>
     </div>
+
+    {showResendModal && (
+      <ResendLetterModal
+        letter={letter}
+        loading={resending}
+        onClose={() => setShowResendModal(false)}
+        onConfirm={handleResend}
+      />
+    )}
+    </>
   );
 };
 

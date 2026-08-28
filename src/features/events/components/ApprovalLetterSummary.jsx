@@ -1,25 +1,29 @@
-import { 
-  CheckCircle2, 
-  XCircle, 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  User, 
-  Check, 
-  CircleDot, 
-  Circle 
+import {
+  CheckCircle2,
+  XCircle,
+  Calendar,
+  Clock,
+  MapPin,
+  User,
+  Check,
+  CircleDot,
+  Circle,
+  Undo2,
 } from "lucide-react";
 import { formatAppDate, formatAppTime } from "../../../shared/utils/dateTime";
+import { getStatusBadge } from "../utils/statusBadge";
 
-const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
+const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnToSecretary }) => {
   if (!letter) return null;
+
+  const statusBadge = getStatusBadge(letter.globalStatus);
 
   return (
     <div className="theme-text flex flex-col h-full">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <span className="px-2 py-0.5 theme-bg-tint border theme-border-primary theme-text-primary text-[10px] font-black uppercase tracking-widest rounded">
-            {letter.globalStatus}
+          <span className={`px-2 py-0.5 border text-[10px] font-black uppercase tracking-widest rounded ${statusBadge.className}`}>
+            {statusBadge.label}
           </span>
         </div>
         <h2 className="text-4xl font-black tracking-tight leading-tight uppercase">
@@ -28,6 +32,26 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
         <p className="theme-text-muted mt-3 leading-relaxed border-l-2 theme-border pl-4 italic">
           "{letter.description || "No description provided."}"
         </p>
+
+        {letter.canReturnToSecretary && (
+          <div className="mt-4 rounded-2xl border theme-border-warning theme-bg-warning-soft p-4">
+            <div className="flex items-start gap-3">
+              <Undo2 size={18} className="mt-0.5 shrink-0 theme-text-warning" />
+              <div>
+                <p className="text-xs font-black uppercase tracking-widest theme-text-warning">
+                  Bounced by a Downstream Approver
+                </p>
+                <p className="mt-1 text-sm leading-relaxed theme-text-warning">
+                  A later approver rejected this letter, so it came back to you. Approve to
+                  re-forward it down the chain, or send it back to the club secretary for revision.
+                </p>
+                {letter.rejectionReason && (
+                  <p className="mt-2 text-xs italic theme-text-warning">"{letter.rejectionReason}"</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-6">
@@ -64,11 +88,21 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
       </div>
 
       <div className="flex gap-4 mt-auto">
+        {letter.canReturnToSecretary && (
+          <button
+            onClick={() => onReturnToSecretary(letter.letterId)}
+            className="flex-1 group py-4 rounded-2xl theme-bg-surface-muted theme-hover-bg-tint border border-transparent theme-hover-border-warning theme-text-muted theme-hover-text-warning transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold"
+          >
+            <Undo2 size={18} className="group-hover:scale-110 transition-transform" />
+            To Secretary
+          </button>
+        )}
+
         <button
           onClick={() => onReject(letter.letterId)}
           className="flex-1 group py-4 rounded-2xl theme-bg-surface-muted theme-hover-bg-tint border border-transparent theme-hover-border-danger theme-text-muted theme-hover-text-danger transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold"
         >
-          <XCircle size={18} className="group-hover:scale-110 transition-transform" /> 
+          <XCircle size={18} className="group-hover:scale-110 transition-transform" />
           Reject
         </button>
 
@@ -76,8 +110,8 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal }) => {
           onClick={onOpenApproveModal}
           className="flex-1 group py-4 rounded-2xl theme-bg-primary theme-hover-bg-primary theme-text-on-primary transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold shadow-lg theme-shadow"
         >
-          <CheckCircle2 size={18} className="group-hover:scale-110 transition-transform" /> 
-          Approve
+          <CheckCircle2 size={18} className="group-hover:scale-110 transition-transform" />
+          {letter.canReturnToSecretary ? "Re-forward" : "Approve"}
         </button>
       </div>
     </div>

@@ -90,7 +90,7 @@ function ClubDetailsPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
                       <h1 className="text-4xl font-black theme-text tracking-tighter">{club.clubName}</h1>
-                      <span className="px-3 py-1 rounded-full theme-bg-tint border theme-border-primary theme-text-primary text-[10px] font-black uppercase tracking-widest">
+                      <span className="px-3 py-1 rounded-full theme-bg-tint-strong border theme-border-primary theme-text-primary text-[10px] font-black uppercase tracking-widest">
                         Official Club
                       </span>
                     </div>
@@ -108,7 +108,7 @@ function ClubDetailsPage() {
                 {/* Vision & Mission Sections */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="p-6 rounded-3xl border theme-border theme-bg-surface theme-hover-border-primary transition-colors">
-                    <div className="w-10 h-10 rounded-xl theme-bg-tint flex items-center justify-center theme-text-primary mb-4">
+                    <div className="w-10 h-10 rounded-xl theme-bg-tint-strong flex items-center justify-center theme-text-primary mb-4">
                       <Target size={20} />
                     </div>
                     <h3 className="text-lg font-bold theme-text mb-2">Our Vision</h3>
@@ -118,7 +118,7 @@ function ClubDetailsPage() {
                   </div>
 
                   <div className="p-6 rounded-3xl border theme-border theme-bg-surface theme-hover-border-primary transition-colors">
-                    <div className="w-10 h-10 rounded-xl theme-bg-tint flex items-center justify-center theme-text-primary mb-4">
+                    <div className="w-10 h-10 rounded-xl theme-bg-tint-strong flex items-center justify-center theme-text-primary mb-4">
                       <Rocket size={20} />
                     </div>
                     <h3 className="text-lg font-bold theme-text mb-2">Our Mission</h3>

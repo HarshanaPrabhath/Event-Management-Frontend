@@ -11,3 +11,4 @@ export { default as ApproversSection } from "./ApproversSection";
 export { default as EventForm } from "./EventForm";
 export { default as LetterCard } from "./LetterCard";
 export { default as RejectedLetterCardDetail } from "./RejectedLetterCardDetail";
+export { default as ResendLetterModal } from "./ResendLetterModal";

@@ -13,8 +13,9 @@ import {
 } from "lucide-react";
 import ApprovalPdfPreview from "./ApprovalPdfPreview";
 
-const getThemeColor = (token, fallback) =>
-  getComputedStyle(document.documentElement).getPropertyValue(token).trim() || fallback;
+// The signature pad is always rendered on a white surface and the signature is later stamped
+// onto a white PDF, so the ink must stay dark regardless of the active (light/dark) theme.
+const SIGNATURE_INK = "#0f172a";
 
 const ApprovalLetterModal = ({
   pdfUrl,
@@ -51,18 +52,22 @@ const ApprovalLetterModal = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(ratio, ratio);
-    ctx.fillStyle = getThemeColor("--theme-signature-surface", "Canvas");
-    ctx.fillRect(0, 0, width, height);
+    // Keep the drawing transparent so the exported PNG overlays cleanly onto the PDF; the white
+    // backdrop the user sees comes from the canvas' CSS background.
+    ctx.clearRect(0, 0, width, height);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.strokeStyle = getThemeColor("--theme-ink", "CanvasText");
+    ctx.strokeStyle = SIGNATURE_INK;
     ctx.lineWidth = 2.2;
   };
 
   useEffect(() => {
     if (activeSignatureTab === "draw") {
-      initCanvas();
+      // Wait a frame so the freshly-shown canvas has its final layout size before we size the bitmap.
+      const raf = window.requestAnimationFrame(initCanvas);
+      return () => window.cancelAnimationFrame(raf);
     }
   }, [activeSignatureTab]);
 
@@ -211,7 +216,7 @@ const ApprovalLetterModal = ({
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b theme-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 theme-bg-tint rounded-lg">
+            <div className="p-2 theme-bg-tint-strong rounded-lg">
               <ShieldCheck className="theme-text-primary" size={24} />
             </div>
             <div>

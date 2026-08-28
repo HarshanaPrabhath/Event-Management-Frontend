@@ -33,7 +33,7 @@ const STATUS_THEME = {
   approved: {
     label: "Approved",
     dot: "theme-bg-accent",
-    chip: "theme-border-primary theme-text-primary theme-bg-tint",
+    chip: "theme-border-primary theme-text-primary theme-bg-tint-strong",
     className: "calendar-event-approved",
   },
   pending: {
@@ -339,7 +339,7 @@ function CalendarPage({ source = "dashboard" }) {
 
               <div className="p-8 space-y-6">
                 <div className="flex justify-between items-start">
-                  <div className="theme-bg-tint theme-text-primary p-3 rounded-xl border theme-border-primary">
+                  <div className="theme-bg-tint-strong theme-text-primary p-3 rounded-xl border theme-border-primary">
                     <Info size={24} />
                   </div>
                   <button
