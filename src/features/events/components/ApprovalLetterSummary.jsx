@@ -91,7 +91,7 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnT
         {letter.canReturnToSecretary && (
           <button
             onClick={() => onReturnToSecretary(letter.letterId)}
-            className="flex-1 group py-4 rounded-2xl theme-bg-surface-muted theme-hover-bg-tint border border-transparent theme-hover-border-warning theme-text-muted theme-hover-text-warning transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold"
+            className="flex-1 group py-4 rounded-2xl theme-bg-warning-solid theme-hover-bg-warning-solid theme-text-on-primary transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold shadow-lg theme-shadow"
           >
             <Undo2 size={18} className="group-hover:scale-110 transition-transform" />
             To Secretary
@@ -100,7 +100,7 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnT
 
         <button
           onClick={() => onReject(letter.letterId)}
-          className="flex-1 group py-4 rounded-2xl theme-bg-surface-muted theme-hover-bg-tint border border-transparent theme-hover-border-danger theme-text-muted theme-hover-text-danger transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold"
+          className="flex-1 group py-4 rounded-2xl theme-bg-danger-solid theme-hover-bg-danger-solid theme-text-on-primary transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold shadow-lg theme-shadow"
         >
           <XCircle size={18} className="group-hover:scale-110 transition-transform" />
           Reject
@@ -108,7 +108,7 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnT
 
         <button
           onClick={onOpenApproveModal}
-          className="flex-1 group py-4 rounded-2xl theme-bg-primary theme-hover-bg-primary theme-text-on-primary transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold shadow-lg theme-shadow"
+          className="flex-1 group py-4 rounded-2xl theme-bg-success-solid theme-hover-bg-success-solid theme-text-on-primary transition-all duration-200 inline-flex items-center justify-center gap-2 font-bold shadow-lg theme-shadow"
         >
           <CheckCircle2 size={18} className="group-hover:scale-110 transition-transform" />
           {letter.canReturnToSecretary ? "Re-forward" : "Approve"}

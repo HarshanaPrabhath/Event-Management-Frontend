@@ -145,7 +145,11 @@ function ToApprovePage() {
               <button
                 onClick={confirmModal}
                 disabled={submitting}
-                className="theme-bg-danger theme-text-on-primary px-4 py-2 rounded disabled:opacity-60"
+                className={`px-4 py-2 rounded-lg font-semibold theme-text-on-primary disabled:opacity-60 ${
+                  modalMode === "return"
+                    ? "theme-bg-warning-solid theme-hover-bg-warning-solid"
+                    : "theme-bg-danger-solid theme-hover-bg-danger-solid"
+                }`}
               >
                 {submitting
                   ? "Submitting..."

@@ -70,6 +70,15 @@
     --status-warning: #854d0e;
     --status-warning-soft: #fffbeb;
     --status-warning-line: #fef3c7;
+
+    /* Solid action-button fills (kept legible with white text in both themes,
+       unlike --status-* above which are tuned for text/badges on soft backgrounds) */
+    --status-success-button: #16a34a;
+    --status-success-button-hover: #15803d;
+    --status-danger-button: #dc2626;
+    --status-danger-button-hover: #b91c1c;
+    --status-warning-button: #d97706;
+    --status-warning-button-hover: #b45309;
 }
 
 :root[data-theme="dark"] {
@@ -120,6 +129,15 @@
     --status-warning: #fde68a;
     --status-warning-soft: rgb(245 158 11 / 0.12);
     --status-warning-line: rgb(253 230 138 / 0.32);
+
+    /* Solid action-button fills (kept legible with white text in both themes,
+       unlike --status-* above which are tuned for text/badges on soft backgrounds) */
+    --status-success-button: #22c55e;
+    --status-success-button-hover: #16a34a;
+    --status-danger-button: #ef4444;
+    --status-danger-button-hover: #dc2626;
+    --status-warning-button: #f59e0b;
+    --status-warning-button-hover: #d97706;
 }
 
 html {
@@ -161,6 +179,9 @@ textarea {
 .theme-bg-danger-soft { background-color: var(--status-danger-soft); }
 .theme-bg-warning { background-color: var(--status-warning); }
 .theme-bg-warning-soft { background-color: var(--status-warning-soft); }
+.theme-bg-success-solid { background-color: var(--status-success-button); }
+.theme-bg-danger-solid { background-color: var(--status-danger-button); }
+.theme-bg-warning-solid { background-color: var(--status-warning-button); }
 .theme-signature-surface { background-color: var(--theme-signature-surface); }
 
 .theme-text { color: var(--theme-ink); }
@@ -230,6 +251,9 @@ textarea {
 .theme-hover-bg:hover { background-color: var(--theme-surface-muted); }
 .theme-hover-bg-tint:hover { background-color: var(--theme-tint-strong); }
 .theme-hover-bg-primary:hover { background-color: var(--theme-button-hover); }
+.theme-hover-bg-success-solid:hover { background-color: var(--status-success-button-hover); }
+.theme-hover-bg-danger-solid:hover { background-color: var(--status-danger-button-hover); }
+.theme-hover-bg-warning-solid:hover { background-color: var(--status-warning-button-hover); }
 .theme-hover-text:hover { color: var(--theme-ink); }
 .theme-hover-text-primary:hover { color: var(--theme-primary); }
 .theme-hover-text-danger:hover { color: var(--status-danger); }

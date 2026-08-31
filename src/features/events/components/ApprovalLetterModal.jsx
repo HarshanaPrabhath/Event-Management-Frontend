@@ -445,7 +445,7 @@ const ApprovalLetterModal = ({
               <button
                 onClick={onConfirm}
                 disabled={loading || (requiresSignature && (!signaturePosition || !signatureUrl))}
-                className="w-full py-4 theme-bg-primary theme-hover-bg-primary theme-disabled-bg theme-disabled-text theme-text-on-primary rounded-xl font-bold transition-all shadow-lg theme-shadow active:scale-[0.98] flex items-center justify-center gap-2"
+                className="w-full py-4 theme-bg-success-solid theme-hover-bg-success-solid theme-disabled-bg theme-disabled-text theme-text-on-primary rounded-xl font-bold transition-all shadow-lg theme-shadow active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>

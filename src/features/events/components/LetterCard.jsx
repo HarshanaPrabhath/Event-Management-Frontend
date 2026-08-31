@@ -148,7 +148,7 @@ const LetterCard = ({ letter, onChanged }) => {
                       type="button"
                       disabled={cancelling}
                       onClick={handleCancel}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl theme-bg-surface-muted theme-hover-bg-tint border theme-border theme-hover-border-danger theme-text-muted theme-hover-text-danger text-[10px] font-black uppercase tracking-widest transition-colors disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl theme-bg-danger-solid theme-hover-bg-danger-solid theme-text-on-primary text-[10px] font-black uppercase tracking-widest transition-colors disabled:opacity-60"
                     >
                       <Ban size={12} /> {cancelling ? "Cancelling..." : "Cancel"}
                     </button>
