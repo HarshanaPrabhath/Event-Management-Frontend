@@ -1,14 +1,12 @@
 function ApproverItem({
   approver,
   index,
+  stepNumber,
   roleMap,
   onRoleChange,
   onRemove,
 }) {
-  const isFirstApprover =
-    index === 0 &&
-    (approver.userId || approver.name) &&
-    !Object.keys(roleMap).includes(approver.role);
+  const isFirstApprover = Boolean(approver.isPlaceResponsible);
 
   return (
     <div
@@ -18,7 +16,7 @@ function ApproverItem({
       <div className="flex-shrink-0">
         <input
           type="number"
-          value={approver.order}
+          value={stepNumber ?? approver.order}
           disabled
           readOnly
           className={`w-12 theme-bg-page border theme-border rounded-lg p-2 text-center text-sm font-bold theme-text-primary focus:ring-1 theme-focus-ring outline-none ${

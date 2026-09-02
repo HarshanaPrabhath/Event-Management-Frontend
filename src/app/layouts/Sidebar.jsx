@@ -101,11 +101,16 @@ function Sidebar() {
       {
         title: "Workspace",
         items: [
-          {
-            name: "Create Event",
-            path: "/dashboard/events",
-            icon: <PlusCircle size={18} />,
-          },
+          // Only a club secretary can create/send an event request.
+          ...(isSecretary
+            ? [
+                {
+                  name: "Create Event",
+                  path: "/dashboard/events",
+                  icon: <PlusCircle size={18} />,
+                },
+              ]
+            : []),
           {
             name: "Letter Box",
             path: "/dashboard/my-letters",

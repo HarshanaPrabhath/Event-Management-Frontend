@@ -3,6 +3,7 @@ import { EventForm } from "../components";
 import { useCreateEvent } from "../hooks/useCreateEvent";
 import { usePlaces } from "../hooks/usePlaces";
 import { useResponsiblePersons } from "../hooks/useResponsiblePersons";
+import { getApiErrorMessage } from "../../../shared/api/apiError";
 
 function EventPage() {
   const getInitialState = () => ({
@@ -29,7 +30,7 @@ function EventPage() {
       setFile(null);
     } catch (err) {
       console.error("Event submit error:", err);
-      alert(err.message || "Something went wrong");
+      alert(getApiErrorMessage(err, "Failed to create event"));
     }
   };
 

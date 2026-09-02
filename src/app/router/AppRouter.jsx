@@ -15,6 +15,7 @@ import { NotFoundPage } from "../../features/not-found/pages";
 import { ClubCreatePage, ClubDetailsPage, ClubProfilePage, ManageClubsPage } from "../../features/club/pages";
 import { LandingPage } from "../../features/landing/pages";
 import ThemeToggle from "../../shared/ui/ThemeToggle";
+import { hasRole } from "../../shared/utils/roles";
 
 const hasSession = () => {
   try {
@@ -26,8 +27,27 @@ const hasSession = () => {
   }
 };
 
+const getStoredRoles = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user") || "null")?.roles || [];
+  } catch {
+    return [];
+  }
+};
+
+const isSecretary = () => hasRole(getStoredRoles(), "ROLE_SECRETARY");
+
 function RequireAuth({ children }) {
   return hasSession() ? children : <Navigate to="/login" replace />;
+}
+
+// Only a club secretary can create/send an event request.
+function RequireSecretary({ children }) {
+  return isSecretary() ? children : <Navigate to="/dashboard/calendar" replace />;
+}
+
+function DashboardIndexRedirect() {
+  return <Navigate to={isSecretary() ? "events" : "calendar"} replace />;
 }
 
 function RedirectIfAuth({ children }) {
@@ -78,8 +98,15 @@ function AppRouter() {
             </RequireAuth>
           )}
         >
-          <Route index element={<Navigate to="events" replace />} />
-          <Route path="events" element={<EventsPage />} />
+          <Route index element={<DashboardIndexRedirect />} />
+          <Route
+            path="events"
+            element={(
+              <RequireSecretary>
+                <EventsPage />
+              </RequireSecretary>
+            )}
+          />
           <Route path="places" element={<PlacesPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="my-letters" element={<MyLettersPage />} />
@@ -90,7 +117,7 @@ function AppRouter() {
           <Route path="manage-clubs" element={<ManageClubsPage />} />
           <Route path="users-create" element={<AdminCreateUserPage />} />
           <Route path="my-club" element={<ClubProfilePage />} />
-          <Route path="*" element={<Navigate to="events" replace />} />
+          <Route path="*" element={<DashboardIndexRedirect />} />
         </Route>
 
         {/* 404 */}

@@ -42,7 +42,7 @@ const ResendLetterModal = ({ letter, loading, onClose, onConfirm }) => {
             <div>
               <h2 className="text-xl font-bold theme-text tracking-tight">Revise &amp; Resend Letter</h2>
               <p className="text-[10px] theme-text-muted uppercase tracking-widest mt-1">
-                Sends back to the senior treasurer for a fresh approval pass
+                Rebuilds the approval chain from the start for a fresh pass
               </p>
             </div>
           </div>
@@ -160,8 +160,9 @@ const ResendLetterModal = ({ letter, loading, onClose, onConfirm }) => {
           </div>
 
           <p className="text-[11px] theme-text-muted italic">
-            The approver chain from the original submission stays the same — the senior treasurer
-            reviews first, followed by the place-responsible person and any other approvers already assigned.
+            The approver chain from the original submission stays the same — the venue's responsible
+            person reviews first when a venue is booked, then the senior treasurer, followed by any
+            other approvers already assigned.
           </p>
 
           <div className="pt-2 flex gap-3">

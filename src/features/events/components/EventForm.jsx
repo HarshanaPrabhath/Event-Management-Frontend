@@ -1,10 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import ApproversSection from "./ApproversSection";
-import { getResponsiblePerson } from "../api/eventService";
+import { getResponsiblePerson, getMySeniorTreasurer } from "../api/eventService";
 import { Calendar, Clock, MapPin, AlignLeft, FileText, Send, Loader2 } from "lucide-react";
+
+// The real approval order the backend builds (LetterService#buildAndSaveSteps): the venue's
+// responsible person (TO) leads when a venue is requested, the senior treasurer always signs
+// next, then the manually-added approvers in the order they were added.
+const renumber = (list) => list.map((a, i) => ({ ...a, order: i + 1 }));
 
 function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit }) {
   const [loadingApprovers, setLoadingApprovers] = useState(false);
+  const [seniorTreasurer, setSeniorTreasurer] = useState(null);
   const fileInputRef = useRef(null);
 
   // Reset file input if eventName is cleared
@@ -13,6 +19,19 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
       fileInputRef.current.value = "";
     }
   }, [values.eventName]);
+
+  useEffect(() => {
+    getMySeniorTreasurer()
+      .then((data) => {
+        if (data?.seniorTreasurerRegNumber) {
+          setSeniorTreasurer({
+            regNumber: data.seniorTreasurerRegNumber,
+            name: data.seniorTreasurerName || data.seniorTreasurerRegNumber,
+          });
+        }
+      })
+      .catch((err) => console.error("Senior treasurer lookup error:", err));
+  }, []);
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
@@ -23,12 +42,13 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
     }
 
     const placeValue = value === "" ? null : value;
+    const manualApprovers = (values.approvers || []).filter((a) => !a.isPlaceResponsible);
 
     if (!placeValue) {
       setValues((prev) => ({
         ...prev,
         eventPlace: null,
-        approvers: [],
+        approvers: renumber(manualApprovers),
       }));
       return;
     }
@@ -39,28 +59,39 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
     try {
       const data = await getResponsiblePerson(placeValue);
       if (data?.responsiblePersonName) {
-        setValues((prev) => {
-          return {
-            ...prev,
-            approvers: [
-              {
-                order: 1,
-                role: data.responsiblePersonName,
-                userId: data.responsiblePersonRegNumber,
-                name: data.responsiblePersonRegNumber,
-                displayName: data.responsiblePersonName,
-              },
-            ],
-          };
-        });
+        setValues((prev) => ({
+          ...prev,
+          approvers: renumber([
+            {
+              role: data.responsiblePersonName,
+              userId: data.responsiblePersonRegNumber,
+              name: data.responsiblePersonRegNumber,
+              displayName: data.responsiblePersonName,
+              isPlaceResponsible: true,
+            },
+            ...manualApprovers,
+          ]),
+        }));
+      } else {
+        setValues((prev) => ({ ...prev, approvers: renumber(manualApprovers) }));
       }
     } catch (err) {
       console.error("Responsible person error:", err);
-      setValues((prev) => ({ ...prev, approvers: [] }));
+      setValues((prev) => ({ ...prev, approvers: renumber(manualApprovers) }));
     } finally {
       setLoadingApprovers(false);
     }
   };
+
+  const placeResponsibleEntry = (values.approvers || []).find((a) => a.isPlaceResponsible);
+  const manualEntries = (values.approvers || []).filter((a) => !a.isPlaceResponsible);
+  const pipelinePreview = [
+    ...(placeResponsibleEntry
+      ? [{ label: placeResponsibleEntry.displayName || placeResponsibleEntry.role, tag: "Venue (TO)" }]
+      : []),
+    ...(seniorTreasurer ? [{ label: seniorTreasurer.name, tag: "Senior Treasurer" }] : []),
+    ...manualEntries.map((a) => ({ label: a.displayName || a.role, tag: null })),
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -188,6 +219,22 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], onSubmit 
             </div>
           )}
         </div>
+        {pipelinePreview.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 px-4 pt-4">
+            {pipelinePreview.map((p, i) => (
+              <div
+                key={`${p.label}-${i}`}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full theme-bg-tint-strong border theme-border-primary text-xs font-bold theme-text"
+              >
+                <span className="theme-text-primary">{i + 1}</span>
+                <span>{p.label}</span>
+                {p.tag && (
+                  <span className="text-[9px] uppercase tracking-widest theme-text-muted">{p.tag}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
         <div className="p-4 min-h-[100px]">
           <ApproversSection
             approvers={values.approvers || []}

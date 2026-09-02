@@ -38,3 +38,7 @@ export const getResponsiblePerson = (placeName) =>
 
 export const getResponsiblePersons = () =>
   apiClient.get("/auth/responsible-persons");
+
+// Used to preview the approval pipeline order (TO, then senior treasurer) while placing a letter.
+export const getMySeniorTreasurer = () =>
+  apiClient.get("/me/club");

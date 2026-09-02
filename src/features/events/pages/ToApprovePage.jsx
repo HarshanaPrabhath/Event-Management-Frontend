@@ -27,7 +27,13 @@ function ToApprovePage() {
           ? data.content
           : [];
 
-      setLetters(list);
+      // Bounced letters (rejected downstream, back with the senior treasurer) need
+      // priority attention over fresh letters awaiting a first look.
+      const sorted = [...list].sort(
+        (a, b) => (b.canReturnToSecretary ? 1 : 0) - (a.canReturnToSecretary ? 1 : 0)
+      );
+
+      setLetters(sorted);
     } catch (err) {
       console.error("FETCH ERROR:", err.message);
       setLetters([]);
