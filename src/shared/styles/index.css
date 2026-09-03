@@ -28,7 +28,7 @@
     /* Typography */
     --theme-ink: #0f172a;
     --theme-muted: #334155;
-    --theme-soft: #64748b;
+    --theme-soft: #57657a;
 
     /* Blue accent system */
     --theme-primary: #2563eb;
@@ -37,13 +37,13 @@
     --theme-button-hover: #1d4ed8;
 
     /* Surfaces */
-    --theme-page: #ffffff;
+    --theme-page: #fcfcfd;
     --theme-surface: #ffffff;
-    --theme-surface-muted: #f8fafc;
+    --theme-surface-muted: #f4f6f9;
     --theme-surface-strong: #e2e8f0;
 
     /* Borders & effects */
-    --theme-line: #e2e8f0;
+    --theme-line: #dde3ec;
     --theme-line-strong: #cbd5e1;
     --theme-tint: rgb(37 99 235 / 0.07);
     --theme-tint-strong: rgb(37 99 235 / 0.14);
@@ -73,12 +73,12 @@
 
     /* Solid action-button fills (kept legible with white text in both themes,
        unlike --status-* above which are tuned for text/badges on soft backgrounds) */
-    --status-success-button: #16a34a;
-    --status-success-button-hover: #15803d;
+    --status-success-button: #15803d;
+    --status-success-button-hover: #166534;
     --status-danger-button: #dc2626;
     --status-danger-button-hover: #b91c1c;
-    --status-warning-button: #d97706;
-    --status-warning-button-hover: #b45309;
+    --status-warning-button: #b45309;
+    --status-warning-button-hover: #92400e;
 }
 
 :root[data-theme="dark"] {
