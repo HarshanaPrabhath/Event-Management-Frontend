@@ -78,6 +78,32 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnT
         />
       </div>
 
+      {Array.isArray(letter.resourceRequests) && letter.resourceRequests.length > 0 && (
+        <div className="mb-6 p-4 theme-bg-surface-muted border theme-border rounded-2xl">
+          <p className="text-[10px] font-black theme-text-muted uppercase tracking-widest mb-3">
+            Resources Requested
+          </p>
+          <div className="space-y-1.5">
+            {letter.resourceRequests.map((r, i) => {
+              const overAvailable = r.quantityAvailable != null && r.quantityRequested > r.quantityAvailable;
+              return (
+                <div key={`${r.resourceName}-${i}`} className="flex items-center justify-between text-xs">
+                  <span className="theme-text font-semibold">
+                    {r.quantityRequested}x {r.resourceName}
+                    <span className="theme-text-muted font-normal"> &middot; {r.responsiblePersonName || "no TO assigned"}</span>
+                  </span>
+                  {overAvailable && (
+                    <span className="theme-text-warning font-bold uppercase tracking-widest text-[10px]">
+                      Only {r.quantityAvailable} available
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3 mb-8">
         <div className="p-4 theme-bg-surface-muted border theme-border rounded-2xl">
           <p className="text-[10px] font-black theme-text-muted uppercase tracking-widest mb-3">
@@ -137,7 +163,10 @@ const WorkflowProgress = ({ letter }) => {
   next.sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0));
 
   const stages = [
-    ...previous.map((approver) => ({ ...approver, state: "approved" })),
+    ...previous.map((approver) => ({
+      ...approver,
+      state: approver.status === "REJECTED" ? "rejected" : "approved",
+    })),
     ...(letter.currentApprover ? [{ ...letter.currentApprover, state: "current" }] : []),
     ...next.map((approver) => ({ ...approver, state: "waiting" })),
   ];
@@ -157,20 +186,22 @@ const WorkflowProgress = ({ letter }) => {
             <div className="min-w-[150px] max-w-[170px]">
               <div className="flex items-center gap-2">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center border ${
-                stage.state === "approved"
+                stage.state === "rejected"
+                  ? "theme-bg-danger-soft theme-border-danger theme-text-danger"
+                  : stage.state === "approved"
                   ? "theme-bg-tint-strong theme-border-primary theme-text-primary"
                   : stage.state === "current"
                   ? "theme-bg-tint-strong theme-border-primary theme-text-primary"
                   : "theme-bg-page theme-border theme-text-muted"
               }`}>
-                {stage.state === "approved" ? <Check size={13} /> : stage.state === "current" ? <CircleDot size={13} /> : <Circle size={13} />}
+                {stage.state === "rejected" ? <XCircle size={13} /> : stage.state === "approved" ? <Check size={13} /> : stage.state === "current" ? <CircleDot size={13} /> : <Circle size={13} />}
               </div>
                 <div>
                   <p className="text-xs font-bold theme-text truncate">
                     Step {stage.stepOrder}: {stage.name}
                   </p>
-                  <p className="text-[10px] uppercase tracking-widest theme-text-muted">
-                    {stage.state === "approved" ? "Approved" : stage.state === "current" ? "Current" : "Waiting"}
+                  <p className={`text-[10px] uppercase tracking-widest ${stage.state === "rejected" ? "theme-text-danger" : "theme-text-muted"}`}>
+                    {stage.state === "rejected" ? "Rejected" : stage.state === "approved" ? "Approved" : stage.state === "current" ? "Current" : "Waiting"}
                   </p>
                 </div>
               </div>

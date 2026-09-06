@@ -16,7 +16,7 @@ export const register = (username, email, password, regNumber) =>
   });
 
 export const registerByAdmin = (username, email, password, regNumber, role) =>
-  apiClient.post("/auth/register", {
+  apiClient.post("/admin/users", {
     username,
     email,
     password,

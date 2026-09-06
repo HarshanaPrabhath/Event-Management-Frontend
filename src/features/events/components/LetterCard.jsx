@@ -21,6 +21,7 @@ import {
   RefreshCcw,
   Ban,
   Undo2,
+  XCircle,
 } from "lucide-react";
 import {
   formatAppDate,
@@ -70,11 +71,12 @@ const LetterCard = ({ letter, onChanged }) => {
   const conflicts = Array.isArray(conflictSource?.conflicts)
     ? conflictSource.conflicts
     : [];
+  // PENDING_BOOKING is the normal status once the venue's responsible person has confirmed the
+  // slot - it means this letter legitimately holds its own reservation, not that it's blocked by
+  // a conflict. Only an actual conflict payload (from a failed approve/resend attempt) should
+  // trigger this banner.
   const hasBookingConflict =
-    Boolean(conflictSource?.conflict) ||
-    conflicts.length > 0 ||
-    letter.status === "PENDING_BOOKING" ||
-    letter.globalStatus === "PENDING_BOOKING";
+    Boolean(conflictSource?.conflict) || conflicts.length > 0;
   const conflictMessage =
     conflictSource?.message ||
     letter.conflictMessage ||
@@ -231,6 +233,32 @@ const LetterCard = ({ letter, onChanged }) => {
             </div>
           )}
 
+          {Array.isArray(letter.resourceRequests) && letter.resourceRequests.length > 0 && (
+            <div className="rounded-2xl border theme-border theme-bg-surface p-4">
+              <p className="text-[10px] font-black uppercase tracking-widest theme-text-muted mb-2">
+                Resources Requested
+              </p>
+              <div className="space-y-1.5">
+                {letter.resourceRequests.map((r, i) => {
+                  const overAvailable = r.quantityAvailable != null && r.quantityRequested > r.quantityAvailable;
+                  return (
+                    <div key={`${r.resourceName}-${i}`} className="flex items-center justify-between text-xs">
+                      <span className="theme-text font-semibold">
+                        {r.quantityRequested}x {r.resourceName}
+                        <span className="theme-text-muted font-normal"> &middot; {r.responsiblePersonName || "no TO assigned"}</span>
+                      </span>
+                      {overAvailable && (
+                        <span className="theme-text-warning font-bold uppercase tracking-widest text-[10px]">
+                          Only {r.quantityAvailable} available
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-3">
             <div className="p-4 theme-bg-surface rounded-2xl border theme-border theme-hover-border transition-colors">
               <p className="text-[9px] theme-text-muted font-black uppercase mb-1 tracking-widest">Event Date</p>
@@ -294,25 +322,43 @@ const LetterCard = ({ letter, onChanged }) => {
             </div>
 
             <div className="flex flex-col gap-2">
-              {previousApprovers.map((approver, index) => (
-                <div key={`${approver.stepOrder}-${approver.regNumber}-${index}`} className="flex items-center justify-between p-4 theme-bg-tint-strong border theme-border-primary rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center theme-text-primary border theme-border-primary">
-                      <CheckCircle2 size={16} />
+              {previousApprovers.map((approver, index) => {
+                const wasRejected = approver.status === "REJECTED";
+                return (
+                  <div
+                    key={`${approver.stepOrder}-${approver.regNumber}-${index}`}
+                    className={`flex items-center justify-between p-4 border rounded-2xl ${
+                      wasRejected
+                        ? "theme-bg-danger-soft theme-border-danger"
+                        : "theme-bg-tint-strong theme-border-primary"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center border ${
+                          wasRejected
+                            ? "theme-text-danger theme-border-danger"
+                            : "theme-text-primary theme-border-primary"
+                        }`}
+                      >
+                        {wasRejected ? <XCircle size={16} /> : <CheckCircle2 size={16} />}
+                      </div>
+                      <div>
+                        <p className={`text-xs font-black uppercase tracking-widest ${
+                          wasRejected ? "theme-text-danger" : "theme-text-primary"
+                        }`}>
+                          Step {approver.stepOrder} {wasRejected ? "Rejected" : "Approved"}
+                        </p>
+                        <p className="text-sm font-semibold theme-text">
+                          {approver.name || "Approver"} ({approver.regNumber || "N/A"})
+                        </p>
+                        {approver.remarks && <p className="text-xs theme-text mt-1">{approver.remarks}</p>}
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-black uppercase tracking-widest theme-text-primary">
-                        Step {approver.stepOrder} Approved
-                      </p>
-                      <p className="text-sm font-semibold theme-text">
-                        {approver.name || "Approver"} ({approver.regNumber || "N/A"})
-                      </p>
-                      {approver.remarks && <p className="text-xs theme-text mt-1">{approver.remarks}</p>}
-                    </div>
+                    <p className="text-[11px] theme-text-muted">{formatAppDateTime(approver.actedAt)}</p>
                   </div>
-                  <p className="text-[11px] theme-text-muted">{formatAppDateTime(approver.actedAt)}</p>
-                </div>
-              ))}
+                );
+              })}
 
               {letter.currentApprover && (
                 <div className="flex items-center justify-between p-4 theme-bg-tint-strong border theme-border-primary rounded-2xl">

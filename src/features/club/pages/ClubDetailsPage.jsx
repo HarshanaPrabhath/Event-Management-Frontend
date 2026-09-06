@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Building2, UserRound, FileText, Target, Rocket } from "lucide-react";
 import { getClubs } from "../api/clubService";
 import { ClubExecutiveBoardPanel } from "../components";
-import { parseExecutiveBoard, resolveImageUrl } from "../lib/clubUtils";
+import { parseExecutiveBoard, parseMembers, resolveImageUrl } from "../lib/clubUtils";
 
 function ClubDetailsPage() {
   const navigate = useNavigate();
@@ -16,6 +16,10 @@ function ClubDetailsPage() {
   const normalizedId = useMemo(() => String(clubId || ""), [clubId]);
   const executiveBoardMembers = useMemo(
     () => parseExecutiveBoard(club?.executiveBoardJson ?? club?.executiveBoard),
+    [club]
+  );
+  const clubMembers = useMemo(
+    () => parseMembers(club?.membersJson ?? club?.members),
     [club]
   );
 
@@ -144,6 +148,12 @@ function ClubDetailsPage() {
               <div className="space-y-6">
                 {/* Executive Board Placeholder */}
                 <ClubExecutiveBoardPanel members={executiveBoardMembers} />
+                <ClubExecutiveBoardPanel
+                  members={clubMembers}
+                  title="Members"
+                  roleKey="role"
+                  emptyMessage="No members have been added yet."
+                />
               </div>
 
             </div>

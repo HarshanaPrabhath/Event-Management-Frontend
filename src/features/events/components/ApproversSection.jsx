@@ -2,7 +2,7 @@ import ApproversHeader from "./ApproversHeader";
 import ApproversList from "./ApproversList";
 import AddApproverButton from "./AddApproverButton";
 
-function ApproversSection({ approvers, setValues, roleMap }) {
+function ApproversSection({ approvers, setValues, roleMap, seniorTreasurer, resourceApprovers = [] }) {
   const resolveRoleDetails = (role) => {
     const raw = roleMap[role];
     if (!raw) {
@@ -72,9 +72,11 @@ function ApproversSection({ approvers, setValues, roleMap }) {
 
   return (
     <div className="space-y-4">
-      <ApproversHeader count={approvers.length} />
+      <ApproversHeader count={approvers.length + (seniorTreasurer ? 1 : 0) + resourceApprovers.length} />
       <ApproversList
         approvers={approvers}
+        seniorTreasurer={seniorTreasurer}
+        resourceApprovers={resourceApprovers}
         roleMap={roleMap}
         onRoleChange={handleRoleChange}
         onRemove={removeApprover}

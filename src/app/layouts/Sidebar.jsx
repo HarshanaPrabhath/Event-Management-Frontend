@@ -13,6 +13,7 @@ import {
   Building2,
   UserPlus,
   Settings2,
+  Wrench,
 } from "lucide-react";
 
 import { logoutUser } from "../../features/auth/api/authService";
@@ -126,6 +127,11 @@ function Sidebar() {
             path: "/dashboard/places",
             icon: <MapPin size={18} />,
           },
+          {
+            name: "Equipment",
+            path: "/dashboard/equipment",
+            icon: <Wrench size={18} />,
+          },
         ],
       },
     ];
@@ -211,11 +217,11 @@ function Sidebar() {
     <div className="w-72 theme-bg-page min-h-screen flex flex-col border-r theme-border">
       <div className="p-8 mb-4 flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black theme-text tracking-tight uppercase italic">
-            Event<span className="theme-text-primary">Flow</span>
+          <h2 className="text-xl font-black tracking-tight uppercase italic">
+            <span className="brand-tech">TECH</span><span className="brand-ems">EMS</span>
           </h2>
           <p className="text-[10px] theme-text-muted font-bold tracking-[0.2em] uppercase mt-1">
-            Management System
+            Event Management
           </p>
         </div>
 

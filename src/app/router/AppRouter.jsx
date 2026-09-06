@@ -11,6 +11,7 @@ import {
   RejectedByMePage,
 } from "../../features/events/pages";
 import { PlacesPage } from "../../features/places/pages";
+import { EquipmentPage } from "../../features/equipment/pages";
 import { NotFoundPage } from "../../features/not-found/pages";
 import { ClubCreatePage, ClubDetailsPage, ClubProfilePage, ManageClubsPage } from "../../features/club/pages";
 import { LandingPage } from "../../features/landing/pages";
@@ -108,6 +109,7 @@ function AppRouter() {
             )}
           />
           <Route path="places" element={<PlacesPage />} />
+          <Route path="equipment" element={<EquipmentPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="my-letters" element={<MyLettersPage />} />
           <Route path="to-approve" element={<ToApprovePage />} />

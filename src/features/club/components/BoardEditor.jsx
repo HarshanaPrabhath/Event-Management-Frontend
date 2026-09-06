@@ -5,12 +5,17 @@ function BoardEditor({
   onMemberChange,
   onAddMember,
   onRemoveMember,
+  title = "Executive Board",
+  roleKey = "position",
+  rolePlaceholder = "Position (e.g. President)",
+  namePlaceholder = "Name (e.g. Harshana)",
+  addLabel = "Add Member",
 }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <label className="text-[11px] font-black uppercase tracking-widest theme-text-muted">
-          Executive Board
+          {title}
         </label>
         <button
           type="button"
@@ -18,7 +23,7 @@ function BoardEditor({
           className="inline-flex items-center gap-1.5 rounded-lg border theme-border theme-bg-surface-muted px-3 py-1.5 text-xs font-bold theme-text theme-hover-bg transition-colors"
         >
           <Plus size={14} />
-          Add Member
+          {addLabel}
         </button>
       </div>
 
@@ -30,16 +35,16 @@ function BoardEditor({
           >
             <input
               type="text"
-              value={member.position}
-              onChange={(e) => onMemberChange(index, "position", e.target.value)}
-              placeholder="Position (e.g. President)"
+              value={member[roleKey]}
+              onChange={(e) => onMemberChange(index, roleKey, e.target.value)}
+              placeholder={rolePlaceholder}
               className="rounded-lg border theme-border theme-bg-surface px-3 py-2 text-sm theme-text theme-placeholder focus:outline-none theme-focus-border transition-colors"
             />
             <input
               type="text"
               value={member.name}
               onChange={(e) => onMemberChange(index, "name", e.target.value)}
-              placeholder="Name (e.g. Harshana)"
+              placeholder={namePlaceholder}
               className="rounded-lg border theme-border theme-bg-surface px-3 py-2 text-sm theme-text theme-placeholder focus:outline-none theme-focus-border transition-colors"
             />
             <button

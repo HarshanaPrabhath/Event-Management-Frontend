@@ -3,7 +3,15 @@ import { UserPlus } from "lucide-react";
 import { registerByAdmin } from "../api/authService";
 import { hasRole } from "../../../shared/utils/roles";
 
-const ROLE_OPTIONS = ["user", "lecturer", "dean", "secretary", "admin"];
+const ROLE_OPTIONS = [
+  { value: "user", label: "User" },
+  { value: "lecturer", label: "Lecturer" },
+  { value: "dean", label: "Dean" },
+  { value: "secretary", label: "Secretary" },
+  { value: "senior_treasurer", label: "Senior Treasurer" },
+  { value: "to", label: "Technical Officer" },
+  { value: "admin", label: "Admin" },
+];
 
 function AdminCreateUserPage() {
   const [form, setForm] = useState({
@@ -139,9 +147,9 @@ function AdminCreateUserPage() {
               onChange={handleChange}
               className="w-full rounded-xl border theme-border theme-bg-surface-muted px-4 py-2.5 text-sm focus:outline-none theme-focus-border"
             >
-              {ROLE_OPTIONS.map((role) => (
-                <option key={role} value={role}>
-                  {role}
+              {ROLE_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
                 </option>
               ))}
             </select>

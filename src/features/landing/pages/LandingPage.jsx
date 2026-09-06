@@ -52,9 +52,9 @@ function LandingPage() {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="text-xl font-black tracking-tight theme-text"
+            className="text-xl font-black tracking-tight uppercase"
           >
-            EventFlow
+            <span className="brand-tech">TECH</span><span className="brand-ems">EMS</span>
           </button>
           <button
             type="button"
@@ -137,7 +137,9 @@ function LandingPage() {
       <footer className="border-t theme-border theme-bg-page">
         <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-black theme-text tracking-tight">EventFlow</h3>
+            <h3 className="text-lg font-black tracking-tight uppercase">
+              <span className="brand-tech">TECH</span><span className="brand-ems">EMS</span>
+            </h3>
             <p className="mt-2 text-sm theme-text-muted max-w-sm">
               University event and approval workspace for students, secretaries, and reviewers.
             </p>
@@ -176,7 +178,10 @@ function LandingPage() {
           </div>
         </div>
         <div className="border-t theme-border px-6 py-4 text-center text-xs theme-text-muted">
-          {new Date().getFullYear()} EventFlow. All rights reserved.
+          {new Date().getFullYear()}{" "}
+          <span className="font-black uppercase">
+            <span className="brand-tech">TECH</span><span className="brand-ems">EMS</span>
+          </span>. All rights reserved.
         </div>
       </footer>
     </div>

@@ -6,7 +6,7 @@ function ApproverItem({
   onRoleChange,
   onRemove,
 }) {
-  const isFirstApprover = Boolean(approver.isPlaceResponsible);
+  const isFirstApprover = Boolean(approver.isPlaceResponsible || approver.locked);
 
   return (
     <div

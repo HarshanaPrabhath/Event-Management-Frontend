@@ -2,6 +2,7 @@ import { useState } from "react";
 import { EventForm } from "../components";
 import { useCreateEvent } from "../hooks/useCreateEvent";
 import { usePlaces } from "../hooks/usePlaces";
+import { useGeneralResources } from "../hooks/useGeneralResources";
 import { useResponsiblePersons } from "../hooks/useResponsiblePersons";
 import { getApiErrorMessage } from "../../../shared/api/apiError";
 
@@ -19,6 +20,7 @@ function EventPage() {
   const [values, setValues] = useState(getInitialState());
   const [file, setFile] = useState(null);
   const { places, loading: placesLoading, error: placesError } = usePlaces();
+  const { generalResources } = useGeneralResources();
   const { roleMap, error: roleMapError } = useResponsiblePersons();
   const { loading, submitEvent } = useCreateEvent();
 
@@ -46,6 +48,7 @@ function EventPage() {
         setFile={setFile}
         roleMap={roleMap}
         places={places}
+        generalResources={generalResources}
         onSubmit={handleSubmit}
       />
 

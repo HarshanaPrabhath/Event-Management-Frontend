@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Building2 } from "lucide-react";
-import { createClub, getClubSecretaries } from "../api/clubService";
+import { createClub, getClubSecretaries, getClubSeniorTreasurers } from "../api/clubService";
 
 function ClubCreatePage() {
   const navigate = useNavigate();
@@ -9,23 +9,24 @@ function ClubCreatePage() {
   const [form, setForm] = useState({
     clubName: "",
     secretaryRegNumber: "",
+    seniorTreasurerRegNumber: "",
   });
   const [loading, setLoading] = useState(false);
   const [secretaries, setSecretaries] = useState([]);
+  const [seniorTreasurers, setSeniorTreasurers] = useState([]);
   const [loadingSecretaries, setLoadingSecretaries] = useState(false);
+  const [loadingTreasurers, setLoadingTreasurers] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const asList = (data) =>
+      Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+
     const loadSecretaries = async () => {
       setLoadingSecretaries(true);
       try {
         const data = await getClubSecretaries();
-        const list = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-          ? data.data
-          : [];
-        setSecretaries(list);
+        setSecretaries(asList(data));
       } catch (err) {
         console.error("Failed to load secretaries:", err);
         setError("Failed to load secretary list.");
@@ -35,7 +36,22 @@ function ClubCreatePage() {
       }
     };
 
+    const loadSeniorTreasurers = async () => {
+      setLoadingTreasurers(true);
+      try {
+        const data = await getClubSeniorTreasurers();
+        setSeniorTreasurers(asList(data));
+      } catch (err) {
+        console.error("Failed to load senior treasurers:", err);
+        setError((prev) => prev || "Failed to load senior treasurer list.");
+        setSeniorTreasurers([]);
+      } finally {
+        setLoadingTreasurers(false);
+      }
+    };
+
     loadSecretaries();
+    loadSeniorTreasurers();
   }, []);
 
   const handleChange = (e) => {
@@ -52,6 +68,7 @@ function ClubCreatePage() {
       await createClub({
         clubName: form.clubName,
         secretaryRegNumber: form.secretaryRegNumber,
+        seniorTreasurerRegNumber: form.seniorTreasurerRegNumber,
       });
       navigate("/dashboard");
     } catch (err) {
@@ -126,6 +143,7 @@ function ClubCreatePage() {
                     secretary?.regNo ||
                     "";
                   const name =
+                    secretary?.userName ||
                     secretary?.name ||
                     secretary?.username ||
                     secretary?.fullName ||
@@ -143,6 +161,51 @@ function ClubCreatePage() {
               {!loadingSecretaries && secretaries.length === 0 && (
                 <p className="text-xs theme-text-warning">
                   No secretaries available to assign right now.
+                </p>
+              )}
+            </div>
+
+            {/* Senior Treasurer Reg Number */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-black uppercase tracking-widest theme-text-muted">
+                Senior Treasurer
+              </label>
+              <select
+                name="seniorTreasurerRegNumber"
+                value={form.seniorTreasurerRegNumber}
+                onChange={handleChange}
+                required
+                disabled={loadingTreasurers || seniorTreasurers.length === 0}
+                className="theme-bg-surface-muted border theme-border rounded-xl px-4 py-2.5 text-sm theme-text focus:outline-none theme-focus-border transition-colors disabled:opacity-60"
+              >
+                <option value="">
+                  {loadingTreasurers ? "Loading senior treasurers..." : "Select senior treasurer"}
+                </option>
+                {seniorTreasurers.map((treasurer, index) => {
+                  const regNumber =
+                    treasurer?.regNumber ||
+                    treasurer?.registrationNumber ||
+                    treasurer?.regNo ||
+                    "";
+                  const name =
+                    treasurer?.userName ||
+                    treasurer?.name ||
+                    treasurer?.username ||
+                    treasurer?.fullName ||
+                    "Senior Treasurer";
+                  return (
+                    <option
+                      key={`${regNumber || "st"}-${index}`}
+                      value={regNumber}
+                    >
+                      {regNumber ? `${name} (${regNumber})` : name}
+                    </option>
+                  );
+                })}
+              </select>
+              {!loadingTreasurers && seniorTreasurers.length === 0 && (
+                <p className="text-xs theme-text-warning">
+                  No senior treasurers available to assign right now.
                 </p>
               )}
             </div>
@@ -166,7 +229,13 @@ function ClubCreatePage() {
             </button>
             <button
               type="submit"
-              disabled={loading || loadingSecretaries || secretaries.length === 0}
+              disabled={
+                loading ||
+                loadingSecretaries ||
+                loadingTreasurers ||
+                secretaries.length === 0 ||
+                seniorTreasurers.length === 0
+              }
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl theme-bg-primary theme-hover-bg-primary theme-text-on-primary text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Building2 size={15} />

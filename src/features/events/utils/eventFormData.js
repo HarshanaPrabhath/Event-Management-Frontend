@@ -22,5 +22,15 @@ export const createEventFormData = (payload, file) => {
     formData.append(`approvers[${index}].name`, String(userId));
   });
 
+  (payload.resources || []).forEach((item, index) => {
+    formData.append(`resources[${index}].resourceId`, String(item.resourceId));
+    formData.append(`resources[${index}].quantity`, String(item.quantity));
+  });
+
+  (payload.generalResources || []).forEach((item, index) => {
+    formData.append(`generalResources[${index}].resourceId`, String(item.resourceId));
+    formData.append(`generalResources[${index}].quantity`, String(item.quantity));
+  });
+
   return formData;
 };

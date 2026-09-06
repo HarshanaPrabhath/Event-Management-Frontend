@@ -17,15 +17,23 @@ const INITIAL_FORM = {
   mission: "",
   description: "",
   executiveBoardJson: "[]",
+  membersJson: "[]",
 };
 
+const makeId = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
 const createBoardMember = (member = {}) => ({
-  id:
-    member.id ||
-    (typeof crypto !== "undefined" && crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(16).slice(2)}`),
+  id: member.id || makeId(),
   position: member.position || "",
+  name: member.name || "",
+});
+
+const createClubMember = (member = {}) => ({
+  id: member.id || makeId(),
+  role: member.role || "",
   name: member.name || "",
 });
 
@@ -44,6 +52,7 @@ function ClubProfilePage() {
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [boardMembers, setBoardMembers] = useState([createBoardMember()]);
+  const [clubMembers, setClubMembers] = useState([createClubMember()]);
   const [currentClub, setCurrentClub] = useState(null);
   const [bgImageFile, setBgImageFile] = useState(null);
   const [bgImagePreview, setBgImagePreview] = useState(null);
@@ -72,6 +81,11 @@ function ClubProfilePage() {
           normalizedClub.executiveBoard.length
             ? normalizedClub.executiveBoard.map((member) => createBoardMember(member))
             : [createBoardMember()]
+        );
+        setClubMembers(
+          normalizedClub.members.length
+            ? normalizedClub.members.map((member) => createClubMember(member))
+            : [createClubMember()]
         );
       } catch (err) {
         console.error("Failed to load club profile:", err);
@@ -124,6 +138,23 @@ function ClubProfilePage() {
     });
   };
 
+  const handleClubMemberChange = (index, field, value) => {
+    setClubMembers((prev) =>
+      prev.map((member, i) => (i === index ? { ...member, [field]: value } : member))
+    );
+  };
+
+  const addClubMember = () => {
+    setClubMembers((prev) => [...prev, createClubMember()]);
+  };
+
+  const removeClubMember = (index) => {
+    setClubMembers((prev) => {
+      if (prev.length === 1) return prev;
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   const handleBgImageChange = (e) => {
     const file = e.target.files?.[0] || null;
     setBgImageFile(file);
@@ -146,11 +177,21 @@ function ClubProfilePage() {
 
       const executiveBoardJson = JSON.stringify(cleanedBoard);
 
+      const cleanedMembers = clubMembers
+        .map((member) => ({
+          role: (member.role || "").trim(),
+          name: (member.name || "").trim(),
+        }))
+        .filter((member) => member.role || member.name);
+
+      const membersJson = JSON.stringify(cleanedMembers);
+
       const payload = {
         vision: (form.vision || "").trim() || currentClub?.vision || "",
         mission: (form.mission || "").trim() || currentClub?.mission || "",
         description: (form.description || "").trim() || currentClub?.description || "",
         executiveBoardJson,
+        membersJson,
       };
 
       await updateMyClub(payload);
@@ -166,6 +207,7 @@ function ClubProfilePage() {
       setCurrentClub(normalizedClub);
       setForm(INITIAL_FORM);
       setBoardMembers([createBoardMember()]);
+      setClubMembers([createClubMember()]);
       setBgImageFile(null);
       setBgImagePreview(null);
 
@@ -193,7 +235,7 @@ function ClubProfilePage() {
       <div className="max-w-4xl mx-auto">
         <ClubPageHeader
           title="My Club Profile"
-          subtitle="Update vision, mission, and executive board details."
+          subtitle="Update vision, mission, executive board, and member details."
         />
 
         {currentClub && (
@@ -210,6 +252,12 @@ function ClubProfilePage() {
               <FormField label="Mission" value={currentClub.mission} readOnly rows={3} />
               <FormField label="Description" value={currentClub.description} readOnly rows={4} />
               <BoardReadOnly members={currentClub.executiveBoard || []} />
+              <BoardReadOnly
+                members={currentClub.members || []}
+                title="Members"
+                roleKey="role"
+                emptyMessage="No members saved."
+              />
             </div>
           </div>
         )}
@@ -252,6 +300,18 @@ function ClubProfilePage() {
               onMemberChange={handleBoardMemberChange}
               onAddMember={addBoardMember}
               onRemoveMember={removeBoardMember}
+            />
+
+            <BoardEditor
+              members={clubMembers}
+              onMemberChange={handleClubMemberChange}
+              onAddMember={addClubMember}
+              onRemoveMember={removeClubMember}
+              title="Members"
+              roleKey="role"
+              rolePlaceholder="Role (e.g. Volunteer, free text)"
+              namePlaceholder="Name (e.g. Nimal)"
+              addLabel="Add Member"
             />
 
             {error && (

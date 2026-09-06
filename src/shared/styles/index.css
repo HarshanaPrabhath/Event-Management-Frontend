@@ -79,6 +79,10 @@
     --status-danger-button-hover: #b91c1c;
     --status-warning-button: #b45309;
     --status-warning-button-hover: #92400e;
+
+    /* Brand wordmark: TECH (theme blue) + EMS (ink/white) */
+    --brand-tech: var(--theme-primary);
+    --brand-ems: var(--theme-ink);
 }
 
 :root[data-theme="dark"] {
@@ -138,6 +142,10 @@
     --status-danger-button-hover: #dc2626;
     --status-warning-button: #f59e0b;
     --status-warning-button-hover: #d97706;
+
+    /* Brand wordmark: TECH (theme blue) + EMS (ink/white) */
+    --brand-tech: var(--theme-primary);
+    --brand-ems: var(--theme-ink);
 }
 
 html {
@@ -194,6 +202,10 @@ textarea {
 .theme-text-danger { color: var(--status-danger); }
 .theme-text-warning { color: var(--status-warning); }
 .theme-text-transparent { color: transparent; }
+
+/* Brand wordmark */
+.brand-tech { color: var(--brand-tech); }
+.brand-ems { color: var(--brand-ems); }
 
 .theme-border { border-color: var(--theme-line); }
 .theme-border-strong { border-color: var(--theme-line-strong); }
