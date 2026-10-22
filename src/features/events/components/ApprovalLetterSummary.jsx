@@ -9,6 +9,7 @@ import {
   CircleDot,
   Circle,
   Undo2,
+  RefreshCcw,
 } from "lucide-react";
 import { formatAppDate, formatAppTime } from "../../../shared/utils/dateTime";
 import { getStatusBadge } from "../utils/statusBadge";
@@ -17,6 +18,7 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnT
   if (!letter) return null;
 
   const statusBadge = getStatusBadge(letter.globalStatus);
+  const resendCount = letter.resendCount || 0;
 
   return (
     <div className="theme-text flex flex-col h-full">
@@ -25,6 +27,15 @@ const ApprovalLetterSummary = ({ letter, onReject, onOpenApproveModal, onReturnT
           <span className={`px-2 py-0.5 border text-[10px] font-black uppercase tracking-widest rounded ${statusBadge.className}`}>
             {statusBadge.label}
           </span>
+          {resendCount > 0 && (
+            <span
+              className="inline-flex items-center gap-1 px-2 py-0.5 border theme-border-warning theme-bg-warning-soft theme-text-warning text-[10px] font-black uppercase tracking-widest rounded"
+              title="This letter was previously rejected and revised - it's not a fresh submission."
+            >
+              <RefreshCcw size={11} />
+              Resent{resendCount > 1 ? ` x${resendCount}` : ""}
+            </span>
+          )}
         </div>
         <h2 className="text-4xl font-black tracking-tight leading-tight uppercase">
           {letter.title}
@@ -156,8 +167,11 @@ const InfoTile = ({ icon, label, value, subValue }) => (
 );
 
 const WorkflowProgress = ({ letter }) => {
+  // previousApprovers spans every past resend round plus the live one (the backend keeps full
+  // history instead of wiping it on resend); currentApprover/nextApprovers are always the live
+  // round. Sorting by (round, stepOrder) keeps each round's steps together and in order.
   const previous = Array.isArray(letter.previousApprovers) ? [...letter.previousApprovers] : [];
-  previous.sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0));
+  previous.sort((a, b) => (a.resendRound || 0) - (b.resendRound || 0) || (a.stepOrder || 0) - (b.stepOrder || 0));
 
   const next = Array.isArray(letter.nextApprovers) ? [...letter.nextApprovers] : [];
   next.sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0));
@@ -175,17 +189,39 @@ const WorkflowProgress = ({ letter }) => {
     return <p className="text-xs theme-text-muted">No workflow steps available.</p>;
   }
 
+  const stagesWithDividers = stages.reduce((acc, stage) => {
+    const round = stage.resendRound || 0;
+    const prevRound = acc.length > 0 ? acc[acc.length - 1].round : null;
+    acc.push({ ...stage, round, showRoundDivider: round !== prevRound });
+    return acc;
+  }, []);
+
   return (
-    <div className="overflow-x-auto pb-1">
-      <div className="flex items-start gap-0 min-w-max pr-2">
-      {stages.map((stage, index) => {
-        const isLast = index === stages.length - 1;
+    <div className="max-h-72 overflow-y-auto pr-1">
+      {stagesWithDividers.map((stage, index) => {
+        const isLast = index === stagesWithDividers.length - 1;
+        const round = stage.round;
+        const showRoundDivider = stage.showRoundDivider;
 
         return (
-          <div key={`${stage.stepOrder}-${stage.name}-${index}`} className="flex items-center">
-            <div className="min-w-[150px] max-w-[170px]">
-              <div className="flex items-center gap-2">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center border ${
+          <div key={`${round}-${stage.stepOrder}-${stage.name}-${index}`}>
+            {showRoundDivider && (
+              <div className="flex items-center gap-2 mb-3 mt-1 first:mt-0">
+                <span className="text-[9px] font-black uppercase tracking-widest theme-text-muted whitespace-nowrap">
+                  {round === 0 ? "Original Submission" : `Resent · Attempt ${round + 1}`}
+                </span>
+                <div className="h-px flex-1 theme-bg-surface-strong" />
+              </div>
+            )}
+
+            <div className="relative flex gap-3 pb-5 last:pb-0">
+              {!isLast && (
+                <div className={`absolute left-3 top-6 -translate-x-1/2 w-0.5 bottom-0 ${
+                  stage.state === "approved" ? "theme-bg-tint-strong" : "theme-bg-surface-strong"
+                }`} />
+              )}
+
+              <div className={`relative z-10 shrink-0 w-6 h-6 rounded-full flex items-center justify-center border ${
                 stage.state === "rejected"
                   ? "theme-bg-danger-soft theme-border-danger theme-text-danger"
                   : stage.state === "approved"
@@ -196,26 +232,22 @@ const WorkflowProgress = ({ letter }) => {
               }`}>
                 {stage.state === "rejected" ? <XCircle size={13} /> : stage.state === "approved" ? <Check size={13} /> : stage.state === "current" ? <CircleDot size={13} /> : <Circle size={13} />}
               </div>
-                <div>
-                  <p className="text-xs font-bold theme-text truncate">
-                    Step {stage.stepOrder}: {stage.name}
-                  </p>
-                  <p className={`text-[10px] uppercase tracking-widest ${stage.state === "rejected" ? "theme-text-danger" : "theme-text-muted"}`}>
-                    {stage.state === "rejected" ? "Rejected" : stage.state === "approved" ? "Approved" : stage.state === "current" ? "Current" : "Waiting"}
-                  </p>
-                </div>
+
+              <div className="min-w-0 pt-0.5">
+                <p className="text-xs font-bold theme-text truncate">
+                  Step {stage.stepOrder}: {stage.name}
+                </p>
+                <p className={`text-[10px] uppercase tracking-widest ${stage.state === "rejected" ? "theme-text-danger" : "theme-text-muted"}`}>
+                  {stage.state === "rejected" ? "Rejected" : stage.state === "approved" ? "Approved" : stage.state === "current" ? "Current" : "Waiting"}
+                </p>
+                {stage.remarks && (
+                  <p className="text-[11px] theme-text-muted mt-0.5 italic">"{stage.remarks}"</p>
+                )}
               </div>
             </div>
-
-            {!isLast && (
-              <div className={`mx-2 w-10 h-0.5 ${
-                stage.state === "approved" ? "theme-bg-tint-strong" : "theme-bg-surface-strong"
-              }`} />
-            )}
           </div>
         );
       })}
-      </div>
     </div>
   );
 };

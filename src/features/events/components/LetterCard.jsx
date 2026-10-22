@@ -82,12 +82,33 @@ const LetterCard = ({ letter, onChanged }) => {
     letter.conflictMessage ||
     "Place is already booked for this date/time.";
 
+  // previousApprovers spans every past resend round plus the live one (the backend keeps full
+  // history instead of wiping it on resend); sort by (round, stepOrder) so each round's steps
+  // stay grouped together and in order.
   const previousApprovers = Array.isArray(letter.previousApprovers)
-    ? [...letter.previousApprovers].sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0))
+    ? [...letter.previousApprovers].sort(
+        (a, b) => (a.resendRound || 0) - (b.resendRound || 0) || (a.stepOrder || 0) - (b.stepOrder || 0)
+      )
     : [];
   const nextApprovers = Array.isArray(letter.nextApprovers)
     ? [...letter.nextApprovers].sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0))
     : [];
+  const resendCount = letter.resendCount || 0;
+
+  // Flag the first step of each resend round so the flow list below can drop a divider there.
+  const previousApproversWithDividers = previousApprovers.reduce((acc, approver) => {
+    const round = approver.resendRound || 0;
+    const prevRound = acc.length > 0 ? acc[acc.length - 1].round : null;
+    acc.push({ ...approver, round, showDivider: round !== prevRound });
+    return acc;
+  }, []);
+  const lastFlowRound = previousApproversWithDividers.length > 0
+    ? previousApproversWithDividers[previousApproversWithDividers.length - 1].round
+    : null;
+  // If the live round's first step is still pending (nothing approved in it yet), the divider
+  // needs to sit in front of the "Current Approver" block instead.
+  const currentRound = letter.currentApprover?.resendRound ?? 0;
+  const showDividerBeforeCurrent = Boolean(letter.currentApprover) && currentRound !== lastFlowRound;
 
   const latestRemark =
     letter.approvalNote ||
@@ -130,6 +151,15 @@ const LetterCard = ({ letter, onChanged }) => {
               <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border tracking-widest ${statusBadge.className}`}>
                 {statusBadge.label}
               </span>
+              {resendCount > 0 && (
+                <span
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-full theme-border-warning theme-bg-warning-soft theme-text-warning border text-[10px] font-black uppercase tracking-widest"
+                  title="This letter was previously rejected and revised - approvers see it as a resend, not a fresh submission."
+                >
+                  <RefreshCcw size={11} />
+                  Resent{resendCount > 1 ? ` x${resendCount}` : ""}
+                </span>
+              )}
               <span className="text-[10px] font-bold uppercase tracking-widest theme-text-muted">
                 Letter #{letter.letterId}
               </span>
@@ -322,60 +352,79 @@ const LetterCard = ({ letter, onChanged }) => {
             </div>
 
             <div className="flex flex-col gap-2">
-              {previousApprovers.map((approver, index) => {
+              {previousApproversWithDividers.map((approver, index) => {
                 const wasRejected = approver.status === "REJECTED";
                 return (
-                  <div
-                    key={`${approver.stepOrder}-${approver.regNumber}-${index}`}
-                    className={`flex items-center justify-between p-4 border rounded-2xl ${
-                      wasRejected
-                        ? "theme-bg-danger-soft theme-border-danger"
-                        : "theme-bg-tint-strong theme-border-primary"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center border ${
-                          wasRejected
-                            ? "theme-text-danger theme-border-danger"
-                            : "theme-text-primary theme-border-primary"
-                        }`}
-                      >
-                        {wasRejected ? <XCircle size={16} /> : <CheckCircle2 size={16} />}
+                  <div key={`${approver.round}-${approver.stepOrder}-${approver.regNumber}-${index}`}>
+                    {approver.showDivider && (
+                      <div className="flex items-center gap-2 mb-2 mt-1 first:mt-0">
+                        <span className="text-[9px] font-black uppercase tracking-widest theme-text-muted whitespace-nowrap">
+                          {approver.round === 0 ? "Original Submission" : `Resent · Attempt ${approver.round + 1}`}
+                        </span>
+                        <div className="h-px flex-1 theme-bg-surface-strong" />
                       </div>
-                      <div>
-                        <p className={`text-xs font-black uppercase tracking-widest ${
-                          wasRejected ? "theme-text-danger" : "theme-text-primary"
-                        }`}>
-                          Step {approver.stepOrder} {wasRejected ? "Rejected" : "Approved"}
-                        </p>
-                        <p className="text-sm font-semibold theme-text">
-                          {approver.name || "Approver"} ({approver.regNumber || "N/A"})
-                        </p>
-                        {approver.remarks && <p className="text-xs theme-text mt-1">{approver.remarks}</p>}
+                    )}
+                    <div
+                      className={`flex items-center justify-between p-4 border rounded-2xl ${
+                        wasRejected
+                          ? "theme-bg-danger-soft theme-border-danger"
+                          : "theme-bg-tint-strong theme-border-primary"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center border ${
+                            wasRejected
+                              ? "theme-text-danger theme-border-danger"
+                              : "theme-text-primary theme-border-primary"
+                          }`}
+                        >
+                          {wasRejected ? <XCircle size={16} /> : <CheckCircle2 size={16} />}
+                        </div>
+                        <div>
+                          <p className={`text-xs font-black uppercase tracking-widest ${
+                            wasRejected ? "theme-text-danger" : "theme-text-primary"
+                          }`}>
+                            Step {approver.stepOrder} {wasRejected ? "Rejected" : "Approved"}
+                          </p>
+                          <p className="text-sm font-semibold theme-text">
+                            {approver.name || "Approver"} ({approver.regNumber || "N/A"})
+                          </p>
+                          {approver.remarks && <p className="text-xs theme-text mt-1">{approver.remarks}</p>}
+                        </div>
                       </div>
+                      <p className="text-[11px] theme-text-muted">{formatAppDateTime(approver.actedAt)}</p>
                     </div>
-                    <p className="text-[11px] theme-text-muted">{formatAppDateTime(approver.actedAt)}</p>
                   </div>
                 );
               })}
 
               {letter.currentApprover && (
-                <div className="flex items-center justify-between p-4 theme-bg-tint-strong border theme-border-primary rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center theme-text-primary border theme-border-primary">
-                      <CircleDot size={16} />
+                <>
+                  {showDividerBeforeCurrent && (
+                    <div className="flex items-center gap-2 mb-2 mt-1 first:mt-0">
+                      <span className="text-[9px] font-black uppercase tracking-widest theme-text-muted whitespace-nowrap">
+                        {currentRound === 0 ? "Original Submission" : `Resent · Attempt ${currentRound + 1}`}
+                      </span>
+                      <div className="h-px flex-1 theme-bg-surface-strong" />
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest theme-text-primary">
-                        Current Approver (Step {letter.currentApprover?.stepOrder})
-                      </p>
-                      <p className="text-sm font-semibold theme-text">
-                        {letter.currentApprover?.name || "Pending"}
-                      </p>
+                  )}
+                  <div className="flex items-center justify-between p-4 theme-bg-tint-strong border theme-border-primary rounded-2xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg theme-bg-surface flex items-center justify-center theme-text-primary border theme-border-primary">
+                        <CircleDot size={16} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest theme-text-primary">
+                          Current Approver (Step {letter.currentApprover?.stepOrder})
+                        </p>
+                        <p className="text-sm font-semibold theme-text">
+                          {letter.currentApprover?.name || "Pending"}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </>
               )}
 
               {nextApprovers.map((approver, index) => (

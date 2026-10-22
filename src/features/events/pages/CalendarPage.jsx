@@ -10,6 +10,7 @@ import {
   MapPin,
   RefreshCw,
   Search,
+  Users,
   X,
 } from "lucide-react";
 import { getDashboardCalendarBookings } from "../api/eventService";
@@ -91,6 +92,7 @@ const mapCalendarEvent = (rawEvent) => {
     end,
     location: rawEvent?.placeName || rawEvent?.eventPlace || "Unspecified",
     description: rawEvent?.description || "",
+    club: rawEvent?.clubName || null,
     status,
     statusGroup: group,
   };
@@ -361,6 +363,7 @@ function CalendarPage({ source = "dashboard" }) {
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 pt-4 border-t theme-border">
+                  <ModalDetail icon={<Users />} label="Organizing Club" value={selected.club} />
                   <ModalDetail icon={<MapPin />} label="Venue" value={selected.location} />
                   <ModalDetail
                     icon={<Clock />}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { approveLetter, signApproveLetter } from "../api/approvalService";
 import { buildServerFileUrl } from "../../../shared/api/fileUrl";
+import { getApiErrorMessage } from "../../../shared/api/apiError";
 import { getResponsiblePerson } from "../api/eventService";
 import ApprovalLetterModal from "./ApprovalLetterModal";
 import ApprovalLetterSummary from "./ApprovalLetterSummary";
@@ -118,7 +119,7 @@ const ApprovalLetterCard = ({ letter, onReject, onApprove, onReturnToSecretary }
         return;
       }
 
-      alert("Approval failed");
+      alert(getApiErrorMessage(err, "Approval failed"));
     } finally {
       setLoading(false);
     }

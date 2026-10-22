@@ -1,7 +1,12 @@
 import apiClient from "../../../shared/api/client";
 
-export const getPlaces = () =>
-  apiClient.get("/places");
+// eventDate/startTime/endTime are optional - when given, each place-resource's remainingQuantity
+// reflects what's actually still free for that slot (other overlapping events' approved claims
+// subtracted out) instead of the raw total. excludeLetterId excludes a letter's own earlier claim.
+export const getPlaces = ({ eventDate, startTime, endTime, excludeLetterId } = {}) =>
+  apiClient.get("/places", {
+    params: { eventDate, startTime, endTime, excludeLetterId },
+  });
 
 export const createEvent = (formData) =>
   apiClient.post("/letter/place", formData, {

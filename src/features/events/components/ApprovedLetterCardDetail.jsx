@@ -7,6 +7,7 @@ import {
   FileText,
   History,
   MapPin,
+  RefreshCcw,
   ShieldCheck,
   User,
 } from "lucide-react";
@@ -20,13 +21,25 @@ function ApprovedLetterCardDetail({ letter }) {
 
   const pdfUrl = buildServerFileUrl(letter.pdfPath);
   const statusBadge = getStatusBadge(letter.globalStatus || "APPROVED");
+  const resendCount = letter.resendCount || 0;
+  // previousApprovers spans every past resend round plus the live one - sort by (round, stepOrder)
+  // so each round's steps stay grouped together and in order (stepOrder resets to 1 each round).
   const previousApprovers = Array.isArray(letter.previousApprovers)
-    ? [...letter.previousApprovers].sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0))
+    ? [...letter.previousApprovers].sort(
+        (a, b) => (a.resendRound || 0) - (b.resendRound || 0) || (a.stepOrder || 0) - (b.stepOrder || 0)
+      )
     : [];
   const nextApprovers = Array.isArray(letter.nextApprovers)
     ? [...letter.nextApprovers].sort((a, b) => (a.stepOrder || 0) - (b.stepOrder || 0))
     : [];
   const myAction = letter.myAction || null;
+
+  const previousApproversWithDividers = previousApprovers.reduce((acc, approver) => {
+    const round = approver.resendRound || 0;
+    const prevRound = acc.length > 0 ? acc[acc.length - 1].round : null;
+    acc.push({ ...approver, round, showDivider: round !== prevRound });
+    return acc;
+  }, []);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 theme-bg-surface-muted backdrop-blur-xl border theme-border rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
@@ -63,6 +76,12 @@ function ApprovedLetterCardDetail({ letter }) {
             <span className="text-[10px] font-bold uppercase tracking-widest theme-text-muted">
               Letter #{letter.letterId}
             </span>
+            {resendCount > 0 && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full theme-border-warning theme-bg-warning-soft theme-text-warning border text-[10px] font-black uppercase tracking-widest">
+                <RefreshCcw size={11} />
+                Resent{resendCount > 1 ? ` x${resendCount}` : ""}
+              </span>
+            )}
           </div>
 
           <h2 className="text-3xl font-black theme-text tracking-tight leading-tight">
@@ -141,26 +160,33 @@ function ApprovedLetterCardDetail({ letter }) {
             </div>
           ) : (
             <div className="space-y-2">
-              {previousApprovers.map((approver, index) => (
-                <div
-                  key={`${approver.stepOrder}-${approver.regNumber}-${index}`}
-                  className="flex items-center justify-between p-4 rounded-2xl theme-bg-surface border theme-border"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl theme-bg-tint-strong flex items-center justify-center theme-text-primary border theme-border-primary">
-                      <CheckCircle2 size={14} />
+              {previousApproversWithDividers.map((approver, index) => (
+                <div key={`${approver.round}-${approver.stepOrder}-${approver.regNumber}-${index}`}>
+                  {approver.showDivider && (
+                    <div className="flex items-center gap-2 mb-2 mt-1 first:mt-0">
+                      <span className="text-[9px] font-black uppercase tracking-widest theme-text-muted whitespace-nowrap">
+                        {approver.round === 0 ? "Original Submission" : `Resent · Attempt ${approver.round + 1}`}
+                      </span>
+                      <div className="h-px flex-1 theme-bg-surface-strong" />
                     </div>
-                    <div>
-                      <p className="text-sm font-bold theme-text">
-                        {approver.name || "Approver"} ({approver.regNumber || "N/A"})
-                      </p>
-                      <p className="text-[10px] theme-text-muted font-medium uppercase tracking-tighter">
-                        Step {approver.stepOrder || "N/A"} • {approver.status || "N/A"}
-                      </p>
-                      {approver.remarks && <p className="text-xs theme-text-muted mt-1">{approver.remarks}</p>}
+                  )}
+                  <div className="flex items-center justify-between p-4 rounded-2xl theme-bg-surface border theme-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl theme-bg-tint-strong flex items-center justify-center theme-text-primary border theme-border-primary">
+                        <CheckCircle2 size={14} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold theme-text">
+                          {approver.name || "Approver"} ({approver.regNumber || "N/A"})
+                        </p>
+                        <p className="text-[10px] theme-text-muted font-medium uppercase tracking-tighter">
+                          Step {approver.stepOrder || "N/A"} • {approver.status || "N/A"}
+                        </p>
+                        {approver.remarks && <p className="text-xs theme-text-muted mt-1">{approver.remarks}</p>}
+                      </div>
                     </div>
+                    <p className="text-[10px] theme-text-muted">{formatAppDateTime(approver.actedAt, "HH:mm", "")}</p>
                   </div>
-                  <p className="text-[10px] theme-text-muted">{formatAppDateTime(approver.actedAt, "HH:mm", "")}</p>
                 </div>
               ))}
             </div>

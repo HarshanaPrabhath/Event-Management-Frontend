@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ApproversSection from "./ApproversSection";
-import { getResponsiblePerson, getMySeniorTreasurer } from "../api/eventService";
-import { Calendar, Clock, MapPin, AlignLeft, FileText, Send, Loader2, Wrench } from "lucide-react";
+import { getResponsiblePerson, getMySeniorTreasurer, getPlaces } from "../api/eventService";
+import { getGeneralResources } from "../../equipment/api/equipmentService";
+import { Calendar, Clock, MapPin, AlignLeft, FileText, Send, Loader2, Wrench, Plus, X } from "lucide-react";
 
 // The real approval order the backend builds (LetterService#buildAndSaveSteps): the venue's
 // responsible person (TO) leads when a venue is requested, the senior treasurer always signs
@@ -11,30 +12,68 @@ const renumber = (list) => list.map((a, i) => ({ ...a, order: i + 1 }));
 function EventForm({ values, setValues, setFile, roleMap, places = [], generalResources = [], onSubmit }) {
   const [loadingApprovers, setLoadingApprovers] = useState(false);
   const [seniorTreasurer, setSeniorTreasurer] = useState(null);
-  const [resourceSelections, setResourceSelections] = useState({});
-  const [generalResourceSelections, setGeneralResourceSelections] = useState({});
+  const [addedPlaceResources, setAddedPlaceResources] = useState([]);
+  const [addedGeneralResources, setAddedGeneralResources] = useState([]);
+  const [placePicker, setPlacePicker] = useState({ resourceId: "", quantity: 1 });
+  const [generalPicker, setGeneralPicker] = useState({ resourceId: "", quantity: 1 });
+  // Re-fetched with the current date/time whenever all three are filled in, so equipment already
+  // committed to another event at an overlapping slot (even at a different venue) shows reduced -
+  // or fully booked - instead of the raw total. Null until fetched; falls back to the plain
+  // (unscoped) `places`/`generalResources` props until then.
+  const [liveSlotPlaces, setLiveSlotPlaces] = useState(null);
+  const [liveGeneralResources, setLiveGeneralResources] = useState(null);
   const fileInputRef = useRef(null);
+
+  const hasFullSlot = Boolean(values.eventDate && values.eventTime && values.eventEndTime);
+
+  useEffect(() => {
+    if (!hasFullSlot) {
+      setLiveSlotPlaces(null);
+      setLiveGeneralResources(null);
+      return;
+    }
+
+    let cancelled = false;
+    const slot = { eventDate: values.eventDate, startTime: values.eventTime, endTime: values.eventEndTime };
+
+    getPlaces(slot)
+      .then((data) => { if (!cancelled) setLiveSlotPlaces(Array.isArray(data) ? data : []); })
+      .catch((err) => {
+        console.error("Live places availability error:", err);
+        if (!cancelled) setLiveSlotPlaces(null);
+      });
+
+    getGeneralResources(slot)
+      .then((data) => { if (!cancelled) setLiveGeneralResources(Array.isArray(data) ? data : []); })
+      .catch((err) => {
+        console.error("Live equipment availability error:", err);
+        if (!cancelled) setLiveGeneralResources(null);
+      });
+
+    return () => { cancelled = true; };
+  }, [hasFullSlot, values.eventDate, values.eventTime, values.eventEndTime]);
 
   const selectedPlace = useMemo(
     () => places.find((p) => p.placeName === values.eventPlace) || null,
     [places, values.eventPlace]
   );
-  const availableResources = selectedPlace?.resources || [];
+  const liveSelectedPlace = useMemo(
+    () => liveSlotPlaces?.find((p) => p.placeName === values.eventPlace) || null,
+    [liveSlotPlaces, values.eventPlace]
+  );
+  const availablePlaceResources = (hasFullSlot && liveSelectedPlace ? liveSelectedPlace.resources : selectedPlace?.resources) || [];
+  const availableGeneralResources = (hasFullSlot && liveGeneralResources ? liveGeneralResources : generalResources) || [];
 
-  const buildSelectedItems = (available, selections) =>
-    available
-      .filter((r) => selections[r.id]?.checked)
-      .map((r) => ({
-        resourceId: r.id,
-        quantity: Math.max(1, Number(selections[r.id]?.quantity) || 1),
-        name: r.name,
-        available: r.quantity,
-        responsiblePersonRegNumber: r.responsiblePersonRegNumber,
-        responsiblePersonName: r.responsiblePersonName,
-      }));
-
-  const selectedResourceItems = buildSelectedItems(availableResources, resourceSelections);
-  const selectedGeneralResourceItems = buildSelectedItems(generalResources, generalResourceSelections);
+  const toResourceItem = (item) => ({
+    resourceId: item.resourceId,
+    quantity: item.quantity,
+    name: item.name,
+    available: item.remainingAtPick,
+    responsiblePersonRegNumber: item.responsiblePersonRegNumber,
+    responsiblePersonName: item.responsiblePersonName,
+  });
+  const selectedResourceItems = addedPlaceResources.map(toResourceItem);
+  const selectedGeneralResourceItems = addedGeneralResources.map(toResourceItem);
 
   const distinctResourceApprovers = [];
   [...selectedResourceItems, ...selectedGeneralResourceItems].forEach((item) => {
@@ -49,33 +88,37 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], generalRe
     }
   });
 
-  const toggleResource = (resourceId, checked) => {
-    setResourceSelections((prev) => ({
-      ...prev,
-      [resourceId]: { checked, quantity: prev[resourceId]?.quantity ?? 1 },
-    }));
+  const addResourceFrom = (items, picker, setPicker, setAdded) => {
+    const resource = items.find((r) => String(r.id) === String(picker.resourceId));
+    if (!resource) return;
+    const quantity = Math.max(1, Number(picker.quantity) || 1);
+    const remaining = resource.remainingQuantity ?? resource.quantity ?? 0;
+    if (quantity > remaining) return;
+
+    setAdded((prev) => {
+      if (prev.some((p) => p.resourceId === resource.id)) return prev;
+      return [
+        ...prev,
+        {
+          resourceId: resource.id,
+          name: resource.name,
+          quantity,
+          remainingAtPick: remaining,
+          pendingElsewhere: resource.pendingElsewhere || 0,
+          responsiblePersonRegNumber: resource.responsiblePersonRegNumber,
+          responsiblePersonName: resource.responsiblePersonName,
+        },
+      ];
+    });
+    setPicker({ resourceId: "", quantity: 1 });
   };
 
-  const setResourceQuantity = (resourceId, quantity) => {
-    setResourceSelections((prev) => ({
-      ...prev,
-      [resourceId]: { checked: prev[resourceId]?.checked ?? true, quantity },
-    }));
-  };
-
-  const toggleGeneralResource = (resourceId, checked) => {
-    setGeneralResourceSelections((prev) => ({
-      ...prev,
-      [resourceId]: { checked, quantity: prev[resourceId]?.quantity ?? 1 },
-    }));
-  };
-
-  const setGeneralResourceQuantity = (resourceId, quantity) => {
-    setGeneralResourceSelections((prev) => ({
-      ...prev,
-      [resourceId]: { checked: prev[resourceId]?.checked ?? true, quantity },
-    }));
-  };
+  const addPlaceResource = () => addResourceFrom(availablePlaceResources, placePicker, setPlacePicker, setAddedPlaceResources);
+  const addGeneralResource = () => addResourceFrom(availableGeneralResources, generalPicker, setGeneralPicker, setAddedGeneralResources);
+  const removePlaceResource = (resourceId) =>
+    setAddedPlaceResources((prev) => prev.filter((p) => p.resourceId !== resourceId));
+  const removeGeneralResource = (resourceId) =>
+    setAddedGeneralResources((prev) => prev.filter((p) => p.resourceId !== resourceId));
 
   // Reset file input if eventName is cleared
   useEffect(() => {
@@ -107,7 +150,8 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], generalRe
 
     const placeValue = value === "" ? null : value;
     const manualApprovers = (values.approvers || []).filter((a) => !a.isPlaceResponsible);
-    setResourceSelections({});
+    setAddedPlaceResources([]);
+    setPlacePicker({ resourceId: "", quantity: 1 });
 
     if (!placeValue) {
       setValues((prev) => ({
@@ -254,121 +298,31 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], generalRe
         </FormField>
       </div>
 
-      {availableResources.length > 0 && (
-        <div className="space-y-3 theme-bg-surface border theme-border rounded-2xl p-4">
-          <div className="flex items-center gap-2">
-            <Wrench size={14} className="theme-text-primary" />
-            <span className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em]">
-              Resources Needed
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            {availableResources.map((resource) => {
-              const selection = resourceSelections[resource.id];
-              const checked = Boolean(selection?.checked);
-              const quantity = selection?.quantity ?? 1;
-              const overAvailable = checked && Number(quantity) > (resource.quantity ?? 0);
-
-              return (
-                <div
-                  key={resource.id}
-                  className="flex flex-col gap-1.5 rounded-xl border theme-border theme-bg-surface-muted p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={(e) => toggleResource(resource.id, e.target.checked)}
-                      className="w-4 h-4 cursor-pointer"
-                    />
-                    <span className="text-sm font-semibold theme-text flex-1">
-                      {resource.name}
-                    </span>
-                    <span className="text-[10px] theme-text-muted uppercase tracking-widest">
-                      {resource.quantity} available &middot; {resource.responsiblePersonName || "no TO assigned"}
-                    </span>
-                    {checked && (
-                      <input
-                        type="number"
-                        min="1"
-                        value={quantity}
-                        onChange={(e) => setResourceQuantity(resource.id, e.target.value)}
-                        className="w-20 theme-bg-surface border theme-border rounded-lg px-2 py-1 text-sm text-center theme-text focus:outline-none theme-focus-border"
-                      />
-                    )}
-                  </div>
-                  {overAvailable && (
-                    <p className="text-[11px] theme-text-warning pl-7">
-                      Only {resource.quantity} available at this place — the responsible technical
-                      officer will review whether {quantity} can still be provided.
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {availablePlaceResources.length > 0 && (
+        <ResourcePicker
+          title="Resources Needed"
+          items={availablePlaceResources}
+          addedItems={addedPlaceResources}
+          picker={placePicker}
+          setPicker={setPlacePicker}
+          onAdd={addPlaceResource}
+          onRemove={removePlaceResource}
+          hasFullSlot={hasFullSlot}
+        />
       )}
 
-      {generalResources.length > 0 && (
-        <div className="space-y-3 theme-bg-surface border theme-border rounded-2xl p-4">
-          <div className="flex items-center gap-2">
-            <Wrench size={14} className="theme-text-primary" />
-            <span className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em]">
-              Additional Equipment
-            </span>
-          </div>
-          <p className="text-[11px] theme-text-muted -mt-1">
-            Equipment not tied to any place - available regardless of the venue chosen above.
-          </p>
-
-          <div className="space-y-2">
-            {generalResources.map((resource) => {
-              const selection = generalResourceSelections[resource.id];
-              const checked = Boolean(selection?.checked);
-              const quantity = selection?.quantity ?? 1;
-              const overAvailable = checked && Number(quantity) > (resource.quantity ?? 0);
-
-              return (
-                <div
-                  key={resource.id}
-                  className="flex flex-col gap-1.5 rounded-xl border theme-border theme-bg-surface-muted p-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={(e) => toggleGeneralResource(resource.id, e.target.checked)}
-                      className="w-4 h-4 cursor-pointer"
-                    />
-                    <span className="text-sm font-semibold theme-text flex-1">
-                      {resource.name}
-                    </span>
-                    <span className="text-[10px] theme-text-muted uppercase tracking-widest">
-                      {resource.quantity} available &middot; {resource.responsiblePersonName || "no TO assigned"}
-                    </span>
-                    {checked && (
-                      <input
-                        type="number"
-                        min="1"
-                        value={quantity}
-                        onChange={(e) => setGeneralResourceQuantity(resource.id, e.target.value)}
-                        className="w-20 theme-bg-surface border theme-border rounded-lg px-2 py-1 text-sm text-center theme-text focus:outline-none theme-focus-border"
-                      />
-                    )}
-                  </div>
-                  {overAvailable && (
-                    <p className="text-[11px] theme-text-warning pl-7">
-                      Only {resource.quantity} available — the responsible technical officer will
-                      review whether {quantity} can still be provided.
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {availableGeneralResources.length > 0 && (
+        <ResourcePicker
+          title="Additional Equipment"
+          hint="Equipment not tied to any place - available regardless of the venue chosen above."
+          items={availableGeneralResources}
+          addedItems={addedGeneralResources}
+          picker={generalPicker}
+          setPicker={setGeneralPicker}
+          onAdd={addGeneralResource}
+          onRemove={removeGeneralResource}
+          hasFullSlot={hasFullSlot}
+        />
       )}
 
       <div className="space-y-1.5">
@@ -447,6 +401,122 @@ function EventForm({ values, setValues, setFile, roleMap, places = [], generalRe
         Send Request
       </button>
     </form>
+  );
+}
+
+// Pick one item from a select (showing live remaining stock for the chosen date/time), enter a
+// quantity, Add it to a running list. Shared between place-bound resources and standalone
+// equipment - only the source list/handlers differ.
+function ResourcePicker({ title, hint, items, addedItems, picker, setPicker, onAdd, onRemove, hasFullSlot }) {
+  const pickedResource = items.find((r) => String(r.id) === String(picker.resourceId));
+  const remaining = pickedResource ? (pickedResource.remainingQuantity ?? pickedResource.quantity ?? 0) : 0;
+  const alreadyAdded = Boolean(pickedResource) && addedItems.some((a) => a.resourceId === pickedResource.id);
+  const quantity = Math.max(1, Number(picker.quantity) || 1);
+  const overAvailable = Boolean(pickedResource) && quantity > remaining;
+  const canAdd = Boolean(pickedResource) && !alreadyAdded && !overAvailable && remaining > 0;
+  const contested = Boolean(pickedResource) && (pickedResource.pendingElsewhere || 0) > 0;
+
+  return (
+    <div className="space-y-3 theme-bg-surface border theme-border rounded-2xl p-4">
+      <div className="flex items-center gap-2">
+        <Wrench size={14} className="theme-text-primary" />
+        <span className="text-[10px] font-black theme-text-muted uppercase tracking-[0.2em]">{title}</span>
+      </div>
+      {hint && <p className="text-[11px] theme-text-muted -mt-1">{hint}</p>}
+      {!hasFullSlot && (
+        <p className="text-[11px] theme-text-warning -mt-1">
+          Set the event date, start and end time to see live availability for this slot.
+        </p>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2">
+        <select
+          value={picker.resourceId}
+          onChange={(e) => setPicker((prev) => ({ ...prev, resourceId: e.target.value }))}
+          className="flex-1 min-w-[180px] theme-bg-surface-muted border theme-border rounded-lg px-3 py-2 text-sm theme-text focus:outline-none theme-focus-border"
+        >
+          <option value="">Select equipment...</option>
+          {items.map((r) => {
+            const rem = r.remainingQuantity ?? r.quantity ?? 0;
+            const taken = addedItems.some((a) => a.resourceId === r.id);
+            const alsoPending = (r.pendingElsewhere || 0) > 0;
+            const statusLabel = taken
+              ? "already added"
+              : rem <= 0
+              ? "fully booked for this slot"
+              : `${rem} free${alsoPending ? ", also pending elsewhere" : ""}`;
+            return (
+              <option key={r.id} value={r.id} disabled={rem <= 0 || taken}>
+                {r.name} ({statusLabel})
+              </option>
+            );
+          })}
+        </select>
+        <input
+          type="number"
+          min="1"
+          value={picker.quantity}
+          onChange={(e) => setPicker((prev) => ({ ...prev, quantity: e.target.value }))}
+          className="w-20 theme-bg-surface-muted border theme-border rounded-lg px-2 py-2 text-sm text-center theme-text focus:outline-none theme-focus-border"
+        />
+        <button
+          type="button"
+          onClick={onAdd}
+          disabled={!canAdd}
+          className="inline-flex items-center gap-1 px-4 py-2 rounded-lg theme-bg-primary theme-hover-bg-primary theme-text-on-primary text-xs font-bold uppercase tracking-widest transition disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <Plus size={14} /> Add
+        </button>
+      </div>
+
+      {pickedResource && overAvailable && (
+        <p className="text-[11px] theme-text-danger">
+          Only {remaining} "{pickedResource.name}" left for this date/time - the rest is already
+          committed to another event.
+        </p>
+      )}
+
+      {pickedResource && !overAvailable && contested && (
+        <p className="text-[11px] theme-text-warning">
+          ⚠ Your selected equipment is also in the pending process of another event for this same
+          date/time ({pickedResource.pendingElsewhere} unit{pickedResource.pendingElsewhere === 1 ? "" : "s"}
+          {" "}requested there too) - be aware whichever gets approved first will claim it.
+        </p>
+      )}
+
+      {addedItems.length > 0 && (
+        <div className="space-y-2 pt-1">
+          {addedItems.map((item) => (
+            <div
+              key={item.resourceId}
+              className="flex items-center justify-between rounded-xl border theme-border theme-bg-surface-muted p-3"
+            >
+              <div>
+                <span className="text-sm font-semibold theme-text">
+                  {item.quantity}x {item.name}
+                </span>
+                <span className="text-[10px] theme-text-muted uppercase tracking-widest block">
+                  {item.responsiblePersonName || "no TO assigned"}
+                </span>
+                {item.pendingElsewhere > 0 && (
+                  <span className="text-[10px] theme-text-warning block mt-0.5">
+                    ⚠ Also pending elsewhere for this slot - not locked in until your TO approves it first
+                  </span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => onRemove(item.resourceId)}
+                className="theme-text-muted theme-hover-text transition p-1"
+                aria-label={`Remove ${item.name}`}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
